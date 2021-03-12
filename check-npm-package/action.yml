@@ -1,0 +1,6 @@
+name: "check npm package"
+description: "checks npm package for mistakes that should not be merged into main"
+author: "eDACT"
+runs:
+  using: "docker"
+  image: "Dockerfile"

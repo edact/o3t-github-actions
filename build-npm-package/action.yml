@@ -1,0 +1,6 @@
+name: "build npm package"
+description: "builds npm package"
+author: "eDACT"
+runs:
+  using: "docker"
+  image: "Dockerfile"

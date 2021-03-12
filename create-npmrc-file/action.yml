@@ -1,0 +1,19 @@
+name: "create .npmrc file"
+description: "creates .npmrc file needed for npm installs"
+author: "eDACT"
+inputs:
+  npm_registry_url:
+    description: "URL of the npm registry, no trailing slashes"
+    default: "npm.pkg.github.com"
+    required: false
+  npm_scope:
+    description: "scope that should be used"
+    default: "@edact"
+    required: false
+
+  npm_token:
+    description: "token for the registry"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"

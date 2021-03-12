@@ -1,0 +1,10 @@
+name: "publish npm package"
+description: "publish npm package"
+author: "eDACT"
+inputs:
+  package_version:
+    description: "version the package should get"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"

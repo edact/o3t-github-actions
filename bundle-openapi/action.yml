@@ -1,0 +1,40 @@
+name: "bundle openapi spec"
+description: "bundles multiple openapi files into one"
+author: "eDACT"
+inputs:
+  input_dir:
+    description: "directory of file that should be dereferenced"
+    required: false
+    default: "src/public"
+  output_dir:
+    description: "directory of output file"
+    required: false
+    default: "src/public"
+  input_filename:
+    description: "name of file that should be dereferenced"
+    required: false
+    default: "openapi-raw.yml"
+  output_filename:
+    description: "name of output file"
+    required: false
+    default: "openapi.yml"
+  output_filetype:
+    description: "json or yaml"
+    required: false
+    default: "yaml"
+  dereference:
+    description: "boolean wether to fully derefence the json"
+    required: false
+    default: "false"
+  delete_files:
+    description: boolean wether  to delete files
+    required: false
+    default: "true"
+  delete_glob:
+    description: "glob pattern to delete child openapi files relative to input path"
+    required: false
+    default: "**/*.oas.*"
+    
+runs:
+  using: "docker"
+  image: "Dockerfile"

@@ -1,0 +1,9 @@
+name: 'Enforce Repository Settings'
+description: 'Enforces repository settings.'
+inputs:
+  api-token:
+    description: "Token for the GitHub API."
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'

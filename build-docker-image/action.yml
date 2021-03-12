@@ -1,0 +1,58 @@
+name: "build docker image"
+description: "builds docker image"
+author: "eDACT"
+
+inputs:
+  docker_registry_url:
+    description: "URL of the docker registry, no trailing slashes"
+    required: false
+    default: "registry.edact.de"
+
+  docker_registry_user:
+    description: "user for registry"
+    required: false
+    default: "robot$publisher"
+  
+  docker_registry_token:
+    description: "token for registry"
+    required: true
+  
+  working_directory:
+    description: "working directory the action should be performed in"
+    required: false
+    default: "."
+  
+  image_name:
+    description: "name of the image"
+    required: true
+  
+  image_tags:
+    description: "list of tags, seperated by comma"
+    required: true
+  
+  build_base_tag:
+    description: "tag for images the new image should be built upon"
+    required: false
+    default: latest
+  
+  target_stage:
+    description: ""
+    required: false
+  
+  dockerfile:
+    description: ""
+    required: false
+    default: "Dockerfile"
+    
+  use_cache:
+    description: ""
+    required: false
+    default: "true"
+  
+  cache_tags:
+    description: ""
+    required: false
+
+runs:
+  using: "docker"
+  image: "Dockerfile"

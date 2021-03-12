@@ -1,0 +1,18 @@
+name: "enforce repository settings"
+on:
+  # push:
+  workflow_dispatch:
+  # schedule:  
+  #  - cron: "0 5 * * *"
+
+jobs:
+  enforce-repo-settings:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@main
+
+    - name: enforce repo settings
+      uses: ./enforce-repo-settings
+      with:
+        api-token: ${{ secrets.API_TOKEN }}    
