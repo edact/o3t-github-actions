@@ -18,9 +18,7 @@ module.exports = class RepoService {
 
     return repos.filter((r) => {
       return Object.values({
-        isRelevant: ["a3t", "f3t", "e3t", "i3t", "d3t"].some((prefix) =>
-          r.name.startsWith(prefix)
-        ),
+        isRelevant: r.name.includes("3t-"),
         notArchived: !r.archived,
         // branch: r.default_branch != "main",
         // size: r.size < 10,
@@ -102,5 +100,22 @@ module.exports = class RepoService {
         restrictions: null,
       }
     );
+  }
+
+  async rerunDependabotWorkflowRuns(repo) {
+    const { data } = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+      owner: repo.owner.login,
+      repo: repo.name
+    });
+
+    const runs = data.workflow_runs.filter(run => run.head_commit.author.name === "dependabot[bot]" && run.conclusion==="failure");
+
+    runs.map(run => {
+      octokit.request('POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun', {
+        owner: repo.owner.login,
+        repo: repo.name,
+        run_id: run.id
+      });
+    });
   }
 }

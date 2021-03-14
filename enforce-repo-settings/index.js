@@ -1,5 +1,5 @@
 const core = require("@actions/core");
-const github = require("@actions/github");
+// const github = require("@actions/github");
 const RepoService = require('./repoService');
 
 /*
@@ -21,9 +21,11 @@ try {
     console.log(">>", repos.length, "Repos");
 
     await Promise.all([
-      ...repos.map(async (r) => repoService.enforceRepoSettings(r)),
-      ...repos.map(async (r) => repoService.enforceRepoBranchProtection(r)),
-      ...repos.map(async (r) => repoService.enableRepoDependabot(r)),
+      // TODO: enable once auto merging can be configured
+      // ...repos.map((r) => repoService.enforceRepoSettings(r)),
+      ...repos.map((r) => repoService.enforceRepoBranchProtection(r)),
+      ...repos.map((r) => repoService.enableRepoDependabot(r)),
+      ...repos.map((r) => repoService.rerunDependabotWorkflowRuns(r)),
     ]);
   })();
 } catch (err) {

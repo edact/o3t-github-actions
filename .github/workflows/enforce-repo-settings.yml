@@ -1,9 +1,9 @@
 name: "enforce repository settings"
 on:
-  # push:
+  push:
   workflow_dispatch:
-  # schedule:  
-  #  - cron: "0 5 * * *"
+  schedule:  
+    - cron: "5 5 * * *"
 
 jobs:
   enforce-repo-settings:
