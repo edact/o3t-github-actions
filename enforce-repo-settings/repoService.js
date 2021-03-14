@@ -103,19 +103,29 @@ module.exports = class RepoService {
   }
 
   async rerunDependabotWorkflowRuns(repo) {
-    const { data } = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
-      owner: repo.owner.login,
-      repo: repo.name
-    });
-
-    const runs = data.workflow_runs.filter(run => run.head_commit.author.name === "dependabot[bot]" && run.conclusion==="failure");
-
-    runs.map(run => {
-      octokit.request('POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun', {
+    const { data } = await this.octokit.request(
+      "GET /repos/{owner}/{repo}/actions/runs",
+      {
         owner: repo.owner.login,
         repo: repo.name,
-        run_id: run.id
-      });
-    });
+      }
+    );
+
+    const runs = data.workflow_runs.filter(
+      (run) =>
+        run.head_commit.author.name === "dependabot[bot]" &&
+        run.conclusion === "failure"
+    );
+
+    runs.map((run) =>
+      this.octokit.request(
+        "POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun",
+        {
+          owner: repo.owner.login,
+          repo: repo.name,
+          run_id: run.id,
+        }
+      )
+    );
   }
-}
+};
