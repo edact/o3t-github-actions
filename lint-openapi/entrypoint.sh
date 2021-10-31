@@ -10,4 +10,5 @@ fi
 
 # lint
 npx --package @stoplight/spectral@^5.0.0 \
-    spectral lint ${INPUT_INPUT_PATH}
+    spectral lint ${INPUT_INPUT_PATH} \
+    --skip-rule oas3-unused-components-schema
