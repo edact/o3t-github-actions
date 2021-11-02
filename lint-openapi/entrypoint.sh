@@ -9,6 +9,6 @@ if [ ! -f "$INPUT_INPUT_PATH" ]; then
 fi
 
 # lint
-npx --package @stoplight/spectral \
+npx --package @stoplight/spectral@^5.0.0 \
     spectral lint ${INPUT_INPUT_PATH} \
     --skip-rule oas3-unused-components-schema
