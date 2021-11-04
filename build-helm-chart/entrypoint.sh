@@ -14,11 +14,6 @@ helm registry login -u "${INPUT_HELM_REGISTRY_USER}" -p "${INPUT_HELM_REGISTRY_T
 # split chart tags in array
 chart_tags=$(echo $INPUT_CHART_TAGS | tr ", " "\n")
 
-# lint helm chart
-echo "::group::Lint helm chart"
-helm lint .
-echo "::endgroup::"
-
 # set tags
 echo "::group::Push helm chart"
 for chart_tag in $chart_tags
