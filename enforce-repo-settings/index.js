@@ -21,8 +21,7 @@ try {
     console.log(">>", repos.length, "Repos");
 
     await Promise.all([
-      // TODO: enable once auto merging can be configured
-      // ...repos.map((r) => repoService.enforceRepoSettings(r)),
+      ...repos.map((r) => repoService.enforceRepoSettings(r)),
       ...repos.map((r) => repoService.enforceRepoBranchProtection(r)),
       ...repos.map((r) => repoService.enableRepoDependabot(r)),
       ...repos.map((r) => repoService.rerunDependabotWorkflowRuns(r)),
