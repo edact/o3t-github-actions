@@ -1,0 +1,14 @@
+name: "run newman cli"
+description: "runs newman cli"
+author: "eDACT"
+inputs:
+  postman_token:
+    description: "Postman API Token"
+    required: true
+  postman_collection_id:
+    description: "ID of the collection to run"
+    required: true
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
