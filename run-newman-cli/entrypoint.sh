@@ -12,4 +12,4 @@ npm install newman newman-reporter-htmlextra -g
 # run newman
 newman run https://api.getpostman.com/collections/${INPUT_POSTMAN_COLLECTION_ID}?apikey=${INPUT_POSTMAN_TOKEN} \
     --env-var baseUrl=nginx \
-    --reporters cli,htmlextra --reporters-htmlextra-export ./newman/report.html
+    --reporters cli,htmlextra --reporter-htmlextra-export ./newman/report.html
