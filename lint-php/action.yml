@@ -1,0 +1,11 @@
+name: "Lint PHP"
+description: "Lint PHP Project using PHP CS-Fixer."
+runs:
+  using: "composite"
+  steps:
+    - name: install dependencies & run linter
+      shell: bash
+      run: |
+        cd src
+        composer install -q
+        composer lint-dry
