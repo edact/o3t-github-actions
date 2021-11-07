@@ -8,6 +8,7 @@ runs:
       run: |
         cd src
         composer install -q
-    - name: lint project
-      shell: bash
-      run: composer lint-dry
+        composer lint-dry
+    # - name: lint project
+    #   shell: bash
+    #   run:
