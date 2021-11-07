@@ -3,12 +3,9 @@ description: "Lint PHP Project using PHP CS-Fixer."
 runs:
   using: "composite"
   steps:
-    - name: install project
+    - name: install dependencies & run linter
       shell: bash
       run: |
         cd src
         composer install -q
         composer lint-dry
-    # - name: lint project
-    #   shell: bash
-    #   run:
