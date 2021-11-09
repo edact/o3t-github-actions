@@ -13,6 +13,7 @@ runs:
   using: "composite"
   steps:
     - shell: bash
+      name: Hallo Welt
       run: |
         # makes the script existing once an error occours
         set -euo pipefail
@@ -25,5 +26,7 @@ runs:
         # install
         npm i @stoplight/spectral@^5.0.0 --global --quiet
 
+        echo "::group::lint"
         # lint
         spectral lint ${{ inputs.input_path }} --skip-rule oas3-unused-components-schema
+        echo "::endgroup::"
