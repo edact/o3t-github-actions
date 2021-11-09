@@ -19,14 +19,6 @@ jobs:
           submodules: true
           token: ${{ secrets.READ_TOKEN }}
 
-      - name: checkout custom actions repository
-        uses: actions/checkout@main
-        with:
-          repository: edact/o3t-github-actions
-          ref: main
-          path: .github/actions
-          token: ${{ secrets.READ_TOKEN }}
-
       - name: bundle fully derefenced openapi
         uses: edact/o3t-github-actions/bundle-openapi@main
         with:
@@ -35,16 +27,16 @@ jobs:
           delete_files: false
 
       - name: bundle default openapi
-        uses: ./.github/actions/bundle-openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
 
       - name: create auth.json file
-        uses: edact/actions/create-authjson-file@main
+        uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           location: src
           deploy_token: ${{ secrets.READ_TOKEN }}
 
       - name: build docker image
-        uses: ./.github/actions/build-docker-image
+        uses: edact/o3t-github-actions/build-docker-image@main
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature
