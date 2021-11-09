@@ -38,7 +38,7 @@ jobs:
           path: src/public/openapi.yml
 
       - name: lint openapi specification
-        uses: edact/o3t-github-actions/lint-openapi-spec@main
+        uses: edact/o3t-github-actions/lint-openapi-spec@reusable-workflows
 
   build-docker:
     name: build docker image
