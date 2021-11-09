@@ -20,6 +20,7 @@ runs:
   steps:
     - shell: bash
       run: |
+        npm -h
         # makes the script existing once an error occours
         set -euo pipefail
 
