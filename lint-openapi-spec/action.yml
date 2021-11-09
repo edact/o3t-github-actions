@@ -17,8 +17,8 @@ runs:
         # makes the script existing once an error occours
         set -euo pipefail
 
-        if [ ! -f "$INPUT_INPUT_PATH" ]; then
-            echo "::error::$INPUT_INPUT_PATH does not exist!"
+        if [ ! -f "${{ inputs.input_path }}" ]; then
+            echo "::error::${{ inputs.input_path }} does not exist!"
             exit 1
         fi
 
@@ -26,4 +26,4 @@ runs:
         npm i @stoplight/spectral@^5.0.0 --global --quiet
 
         # lint
-        spectral lint ${INPUT_INPUT_PATH} --skip-rule oas3-unused-components-schema
+        spectral lint ${{ inputs.input_path }} --skip-rule oas3-unused-components-schema
