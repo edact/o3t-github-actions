@@ -10,6 +10,9 @@ on:
       EPR_TOKEN:
         description: "eDACT Package Registry Token"
         required: true
+      POSTMAN_TOKEN:
+        description: "Postman API Token"
+        required: true
 jobs:
   run-integration-tests:
     name: run integration tests
