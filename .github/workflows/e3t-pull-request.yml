@@ -7,6 +7,8 @@ on:
         type: string
         required: true
     secrets:
+      READ_TOKEN:
+        required: true
       EPR_TOKEN:
         description: "eDACT Package Registry Token"
         required: true
@@ -14,8 +16,75 @@ on:
         description: "Postman API Token"
         required: true
 jobs:
+  lint-php:
+    name: lint php
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: lint php code
+        uses: edact/o3t-github-actions/lint-php@main
+
+  lint-oas:
+    name: lint oas
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
+
+      - name: bundle default openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
+
+      - name: upload bundled openapi
+        uses: actions/upload-artifact@main
+        with:
+          name: bundled-openapi
+          path: src/public/openapi.yml
+
+      - name: lint openapi
+        uses: edact/o3t-github-actions/lint-openapi@main
+
+  build-docker:
+    name: build docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
+
+      - name: bundle fully derefenced openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
+        with:
+          output_filename: openapi-internal.yml
+          dereference: true
+          delete_files: false
+
+      - name: bundle default openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
+
+      - name: create auth.json file
+        uses: edact/o3t-github-actions/create-authjson-file@main
+        with:
+          location: src
+          deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: build docker image
+        uses: edact/o3t-github-actions/build-docker-image@main
+        with:
+          image_name: ${{ github.event.repository.name }}
+          image_tags: feature
+          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+
   run-integration-tests:
     name: run integration tests
+    needs: [build-docker]
     runs-on: ubuntu-latest
     services:
       nginx:
