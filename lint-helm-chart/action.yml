@@ -6,9 +6,8 @@ inputs:
     description: "working directory the action should be performed in"
     default: ".deploy"
     required: false
+
 runs:
-  # using: "docker"
-  # image: "Dockerfile"
   using: "composite"
   steps:
     - shell: bash

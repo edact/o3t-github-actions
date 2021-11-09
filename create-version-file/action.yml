@@ -1,5 +1,6 @@
 name: "Create version file"
 description: "Create version file containing commit information."
+
 runs:
   using: "composite"
   steps:

@@ -10,5 +10,19 @@ inputs:
     required: true
 
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        # install newman & html reporter
+        npm install newman newman-reporter-htmlextra --global --quiet
+
+        # run newman
+        echo "::group:: run newman"
+        newman run https://api.getpostman.com/collections/${{ inputs.postman_collection_id }}?apikey=${{ inputs.postman_token }} \
+            --env-var baseUrl=nginx \
+            --reporters cli,htmlextra --reporter-htmlextra-export ./newman/report.html
+        echo "::endgroup::"
