@@ -37,8 +37,8 @@ jobs:
           name: bundled-openapi
           path: src/public/openapi.yml
 
-      - name: lint openapi
-        uses: edact/o3t-github-actions/lint-openapi@main
+      - name: lint openapi specification
+        uses: edact/o3t-github-actions/lint-openapi-spec@main
 
   build-docker:
     name: build docker image
@@ -62,7 +62,7 @@ jobs:
         uses: edact/o3t-github-actions/bundle-openapi@main
 
       - name: create auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@main
+        uses: edact/o3t-github-actions/create-authjson-file@reusable-workflows
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 

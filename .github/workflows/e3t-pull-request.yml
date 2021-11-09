@@ -23,8 +23,8 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@main
 
-      - name: lint php code
-        uses: edact/o3t-github-actions/lint-php@main
+      - name: lint php project
+        uses: edact/o3t-github-actions/lint-php-project@main
 
   lint-helm:
     name: lint helm
@@ -55,8 +55,8 @@ jobs:
           name: bundled-openapi
           path: src/public/openapi.yml
 
-      - name: lint openapi
-        uses: edact/o3t-github-actions/lint-openapi@main
+      - name: lint openapi specification
+        uses: edact/o3t-github-actions/lint-openapi-spec@main
 
   build-docker:
     name: build docker image
