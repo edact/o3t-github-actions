@@ -1,0 +1,51 @@
+name: build feature
+on:
+  workflow_call:
+    secrets:
+      READ_TOKEN:
+        required: true
+      EPR_TOKEN:
+        required: true
+
+jobs:
+  build-docker:
+    name: build docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
+
+      - name: checkout custom actions repository
+        uses: actions/checkout@main
+        with:
+          repository: edact/o3t-github-actions
+          ref: main
+          path: .github/actions
+          token: ${{ secrets.READ_TOKEN }}
+
+      - name: bundle fully derefenced openapi
+        uses: ./.github/actions/bundle-openapi
+        with:
+          output_filename: openapi-internal.yml
+          dereference: true
+          delete_files: false
+
+      - name: bundle default openapi
+        uses: ./.github/actions/bundle-openapi
+
+      - name: create auth.json file
+        uses: edact/actions/create-authjson-file@main
+        with:
+          location: src
+          deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: build docker image
+        uses: ./.github/actions/build-docker-image
+        with:
+          image_name: ${{ github.event.repository.name }}
+          image_tags: feature
+          docker_registry_token: ${{ secrets.EPR_TOKEN }}
