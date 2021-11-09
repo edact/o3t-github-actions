@@ -1,0 +1,39 @@
+name: pull request
+on:
+  workflow_call:
+    secrets:
+      READ_TOKEN:
+        required: true
+
+jobs:
+  lint-php:
+    name: lint php
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: lint php code
+        uses: edact/o3t-github-actions/lint-php@main
+
+  lint-oas:
+    name: lint oas
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
+
+      - name: bundle default openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
+
+      - name: upload bundled openapi
+        uses: actions/upload-artifact@main
+        with:
+          name: bundled-openapi
+          path: src/public/openapi.yml
+
+      - name: lint openapi
+        uses: edact/o3t-github-actions/lint-openapi@main

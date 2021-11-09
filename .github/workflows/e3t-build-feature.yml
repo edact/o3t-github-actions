@@ -1,4 +1,4 @@
-name: build latest
+name: build feature
 on:
   workflow_call:
     secrets:
@@ -39,5 +39,5 @@ jobs:
         uses: edact/o3t-github-actions/build-docker-image@main
         with:
           image_name: ${{ github.event.repository.name }}
-          image_tags: latest
+          image_tags: feature
           docker_registry_token: ${{ secrets.EPR_TOKEN }}

@@ -1,11 +1,6 @@
-name: build feature
+name: build version
 on:
   workflow_call:
-    inputs:
-      type:
-        description: "feature/latest/version"
-        type: string
-        required: true
     secrets:
       READ_TOKEN:
         required: true
@@ -40,30 +35,12 @@ jobs:
           location: src
           deploy_token: ${{ secrets.READ_TOKEN }}
 
-      - name: build docker image
-        uses: edact/o3t-github-actions/build-docker-image@main
-        if: ${{ inputs.type == 'feature' }}
-        with:
-          image_name: ${{ github.event.repository.name }}
-          image_tags: feature
-          docker_registry_token: ${{ secrets.EPR_TOKEN }}
-
-      - name: build docker image
-        uses: edact/o3t-github-actions/build-docker-image@main
-        if: ${{ inputs.type == 'latest' }}
-        with:
-          image_name: ${{ github.event.repository.name }}
-          image_tags: latest
-          docker_registry_token: ${{ secrets.EPR_TOKEN }}
-
       - name: compute version strings
         uses: ./.github/actions/compute-version-strings
-        if: ${{ inputs.type == 'version' }}
         id: versionGetter
 
       - name: build docker image
         uses: edact/o3t-github-actions/build-docker-image@main
-        if: ${{ inputs.type == 'version' }}
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: stable, ${{ steps.versionGetter.outputs.version_minor }}, ${{ steps.versionGetter.outputs.version_major }}

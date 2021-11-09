@@ -1,0 +1,65 @@
+name: pull request
+on:
+  workflow_call:
+    inputs:
+      POSTMAN_COLLECTION_ID:
+        description: "ID of the postman collection that contains the integration tests."
+        type: string
+        required: true
+    secrets:
+      EPR_TOKEN:
+        description: "eDACT Package Registry Token"
+        required: true
+jobs:
+  run-integration-tests:
+    name: run integration tests
+    runs-on: ubuntu-latest
+    services:
+      nginx:
+        image: registry.edact.de/edact/e3t-base-images/e3t-nginx:latest
+        credentials:
+          username: robot$publisher
+          password: ${{ secrets.EPR_TOKEN }}
+        env:
+          PHP_HOST: php
+          RESOLVER: resolver 127.0.0.11 valid=30s;
+        ports:
+          - 8080:80
+      php:
+        image: registry.edact.de/edact/${{ github.event.repository.name }}/${{ github.event.repository.name }}:feature
+        credentials:
+          username: robot$publisher
+          password: ${{ secrets.EPR_TOKEN }}
+        env:
+          APP_DEBUG: true
+          APP_ENV: local
+          DB_HOST: db
+          DB_DATABASE: display
+          DB_USERNAME: display
+          DB_PASSWORD: secret
+          GATEKEEPER_URL: http://gatekeeper:9999
+          DEV_WORKBENCH: WORKBENCH
+          DB_SSLMODE: disable
+          DEV_NO_AUTH: NO_AUTH
+      db:
+        image: postgres:13-alpine
+        env:
+          POSTGRES_ROOT_PASSWORD: lghjsldkfjgklsadfjg
+          POSTGRES_DATABASE: display
+          POSTGRES_USER: display
+          POSTGRES_PASSWORD: secret
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: run integration tests
+        uses: edact/o3t-github-actions/run-newman-cli@main
+        with:
+          postman_token: ${{ secrets.POSTMAN_TOKEN }}
+          postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
+
+      - uses: actions/upload-artifact@main
+        if: always()
+        with:
+          name: newman-report
+          path: ./newman/report.html
