@@ -1,0 +1,9 @@
+name: "Create version file"
+description: "Create version file containing commit information."
+runs:
+  using: "composite"
+  steps:
+    - name: generate json file with commit details
+      shell: bash
+      run: |
+        echo '{ "commit": "${{ github.sha }}","ref": "${{ github.ref }}","base_ref": "${{ github.base_ref }}" }' > ./src/public/version.json

@@ -26,6 +26,16 @@ jobs:
       - name: lint php code
         uses: edact/o3t-github-actions/lint-php@main
 
+  lint-helm:
+    name: lint helm
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: lint helm chart
+        uses: edact/o3t-github-actions/lint-helm-chart@reusable-workflows
+
   lint-oas:
     name: lint oas
     runs-on: ubuntu-latest

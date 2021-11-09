@@ -32,8 +32,10 @@ jobs:
       - name: create auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
-          location: src
           deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: create version file
+        uses: edact/o3t-github-actions/create-version-file@reusable-workflows
 
       - name: compute version strings
         uses: ./.github/actions/compute-version-strings
