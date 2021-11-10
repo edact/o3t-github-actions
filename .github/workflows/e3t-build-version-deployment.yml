@@ -1,0 +1,26 @@
+name: build version deployment
+on:
+  workflow_call:
+    secrets:
+      EHR_TOKEN:
+        description: "eDACT Helm Registry Token"
+        required: true
+
+jobs:
+  push-helm:
+    name: push helm charts
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: compute version strings
+        uses: edact/o3t-github-actions/compute-version-strings@main
+        id: versionGetter
+
+      - name: build helm chart
+        uses: edact/o3t-github-actions/build-helm-chart@main
+        with:
+          chart_name: ${{ github.event.repository.name }}
+          chart_tags: stable, ${{ steps.versionGetter.outputs.version_minor }}, ${{ steps.versionGetter.outputs.version_major }}
+          helm_registry_token: ${{ secrets.EHR_TOKEN }}

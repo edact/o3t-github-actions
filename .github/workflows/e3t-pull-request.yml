@@ -1,0 +1,147 @@
+name: pull request
+on:
+  workflow_call:
+    inputs:
+      POSTMAN_COLLECTION_ID:
+        description: "ID of the postman collection that contains the integration tests."
+        type: string
+        required: true
+    secrets:
+      READ_TOKEN:
+        required: true
+      EPR_TOKEN:
+        description: "eDACT Package Registry Token"
+        required: true
+      POSTMAN_TOKEN:
+        description: "Postman API Token"
+        required: true
+jobs:
+  lint-php:
+    name: lint php
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: lint php project
+        uses: edact/o3t-github-actions/lint-php-project@main
+
+  lint-helm:
+    name: lint helm
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: lint helm chart
+        uses: edact/o3t-github-actions/lint-helm-chart@main
+
+  lint-oas:
+    name: lint oas
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
+
+      - name: bundle default openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
+
+      - name: upload bundled openapi
+        uses: actions/upload-artifact@main
+        with:
+          name: bundled-openapi
+          path: src/public/openapi.yml
+
+      - name: lint openapi specification
+        uses: edact/o3t-github-actions/lint-openapi-spec@main
+
+  build-docker:
+    name: build docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
+
+      - name: bundle fully derefenced openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
+        with:
+          output_filename: openapi-internal.yml
+          dereference: true
+          delete_files: false
+
+      - name: bundle default openapi
+        uses: edact/o3t-github-actions/bundle-openapi@main
+
+      - name: create auth.json file
+        uses: edact/o3t-github-actions/create-authjson-file@main
+        with:
+          location: src
+          deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: build docker image
+        uses: edact/o3t-github-actions/build-docker-image@main
+        with:
+          image_name: ${{ github.event.repository.name }}
+          image_tags: feature
+          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+
+  run-integration-tests:
+    name: run integration tests
+    needs: [build-docker]
+    runs-on: ubuntu-latest
+    services:
+      nginx:
+        image: registry.edact.de/edact/e3t-base-images/e3t-nginx:latest
+        credentials:
+          username: robot$publisher
+          password: ${{ secrets.EPR_TOKEN }}
+        env:
+          PHP_HOST: php
+          RESOLVER: resolver 127.0.0.11 valid=30s;
+        ports:
+          - 8080:80
+      php:
+        image: registry.edact.de/edact/${{ github.event.repository.name }}/${{ github.event.repository.name }}:feature
+        credentials:
+          username: robot$publisher
+          password: ${{ secrets.EPR_TOKEN }}
+        env:
+          APP_DEBUG: true
+          APP_ENV: local
+          DB_HOST: db
+          DB_DATABASE: integration-test
+          DB_USERNAME: integration-test
+          DB_PASSWORD: integration-test
+          GATEKEEPER_URL: http://gatekeeper:9999
+          DEV_WORKBENCH: WORKBENCH
+          DB_SSLMODE: disable
+          DEV_NO_AUTH: NO_AUTH
+      db:
+        image: postgres:13-alpine
+        env:
+          # POSTGRES_ROOT_PASSWORD: lghjsldkfjgklsadfjg
+          POSTGRES_DATABASE: integration-test
+          POSTGRES_USER: integration-test
+          POSTGRES_PASSWORD: integration-test
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: run integration tests
+        uses: edact/o3t-github-actions/run-newman-cli@main
+        with:
+          postman_token: ${{ secrets.POSTMAN_TOKEN }}
+          postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
+
+      - uses: actions/upload-artifact@main
+        if: always()
+        with:
+          name: newman-report
+          path: ./newman/report.html

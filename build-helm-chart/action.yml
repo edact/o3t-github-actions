@@ -24,5 +24,32 @@ inputs:
     description: "token of registry user"
     required: true
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+        chmod 700 get_helm.sh && ./get_helm.sh
+
+        export HELM_EXPERIMENTAL_OCI=1
+
+        # switch to working directory
+        cd ${{ inputs.working_directory }}
+
+        # log into helm registry
+        helm registry login -u "${{ inputs.helm_registry_user }}" -p "${{ inputs.helm_registry_token }}" ${{ inputs.helm_registry_url }}
+
+        # split chart tags in array
+        chart_tags=$(echo ${{ inputs.chart_tags }} | tr ", " "\n")
+
+        # set tags
+        echo "::group::Push helm chart"
+        for chart_tag in $chart_tags
+        do
+            helm chart save . ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ input.chart_name }}:${chart_tag}
+            helm chart push ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ input.chart_name }}:${chart_tag}
+        done
+        echo "::endgroup::"

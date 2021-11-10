@@ -1,6 +1,21 @@
 name: "build npm package"
 description: "builds npm package"
 author: "eDACT"
+
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        # install dependencies
+        echo "::group::Install package dependencies"
+        npm install
+        echo "::endgroup::"
+
+        # build for production
+        echo "::group::Build package"
+        npm run build
+        echo "::endgroup::"

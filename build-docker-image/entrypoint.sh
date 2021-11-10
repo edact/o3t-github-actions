@@ -43,7 +43,7 @@ echo "::endgroup::"
 # set tags
 for IMAGE_TAG in $IMAGE_TAGS
 do
-    docker tag tempcontainer:latest ${FULL_IMAGE_NAME}:${IMAGE_TAG}    
+    docker tag tempcontainer:latest ${FULL_IMAGE_NAME}:${IMAGE_TAG}
 done
 
 # push image to registry

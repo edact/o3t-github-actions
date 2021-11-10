@@ -10,10 +10,16 @@ inputs:
     description: "scope that should be used"
     default: "@edact"
     required: false
-
   npm_token:
     description: "token for the registry"
     required: true
+
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        printf "${{ inputs.npm_scope }}:registry=https://${{ inputs.npm_registry_url }}/ \n //${{ inputs.npm_registry_url }}/:_authToken=${{ inputs.npm_token }}"> .npmrc

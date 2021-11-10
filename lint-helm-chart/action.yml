@@ -6,6 +6,24 @@ inputs:
     description: "working directory the action should be performed in"
     default: ".deploy"
     required: false
+
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        export HELM_EXPERIMENTAL_OCI=1
+
+        # switch to working directory
+        cd ${{ inputs.working_directory }}
+
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+        chmod 700 get_helm.sh && ./get_helm.sh
+
+        # lint helm chart
+        echo "::group::Lint helm chart"
+        helm lint .
+        echo "::endgroup::"

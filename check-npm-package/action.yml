@@ -1,6 +1,29 @@
 name: "check npm package"
 description: "checks npm package for mistakes that should not be merged into main"
 author: "eDACT"
+
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        # makes the script existing once an error occours
+        set -e
+
+        # install dependencies
+        echo "::group::Install dependencies"
+        npm install
+        echo "::endgroup::"
+
+        # run tests specified in package.json
+        echo "::group::Run tests"
+        npm run test --if-present
+        echo "::endgroup::"
+
+        # set mode to production
+        export NODE_ENV="production"
+
+        # lint project
+        echo "::group::Run linter"
+        npm run lint --if-present --no-fix
+        echo "::endgroup::"
