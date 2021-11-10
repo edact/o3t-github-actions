@@ -43,7 +43,7 @@ runs:
         helm registry login -u '${{ inputs.helm_registry_user }}' -p '${{ inputs.helm_registry_token }}' ${{ inputs.helm_registry_url }}
 
         # split chart tags in array
-        chart_tags=$(echo ${{ inputs.chart_tags }} | tr ", " "\n")
+        chart_tags=$(echo '${{ inputs.chart_tags }}' | tr ", " "\n")
 
         # set tags
         echo "::group::Push helm chart"

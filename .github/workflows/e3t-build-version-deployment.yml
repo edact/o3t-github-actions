@@ -18,6 +18,8 @@ jobs:
         uses: edact/o3t-github-actions/compute-version-strings@main
         id: versionGetter
 
+      - run: echo ${{ steps.versionGetter.outputs.version_patch }}, ${{ steps.versionGetter.outputs.version_minor }}, ${{ steps.versionGetter.outputs.version_major }}
+
       - name: build helm chart
         uses: edact/o3t-github-actions/build-helm-chart@main
         with:
