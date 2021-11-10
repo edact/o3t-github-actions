@@ -77,7 +77,7 @@ jobs:
       - name: bundle fully derefenced openapi
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
         with:
-          output_filename: openapi-internal.yml
+          output_path: src/public/openapi-internal.yml
           dereference: true
           delete_files: false
 
