@@ -49,7 +49,7 @@ runs:
         echo "::group::Push helm chart"
         for chart_tag in $chart_tags
         do
-            helm package . ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ inputs.chart_name }}:${chart_tag}
-            helm push ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ inputs.chart_name }}:${chart_tag}
+            helm package . --version ${chart_tag}
+            helm push ${{ inputs.chart_name }}-${chart_tag}.tgz oci://${{ inputs.helm_registry_url}}/${{ github.repository }}
         done
         echo "::endgroup::"
