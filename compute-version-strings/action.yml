@@ -11,7 +11,8 @@ runs:
         set -euo pipefail
 
         # compute values
-        VERSION=$(echo '${{ github.ref }}'| cut -d'/v' -f 2)
+        VERSION=$(echo '${{ github.ref }}'| cut -d'/' -f 3)
+        VERSION=${VERSION#"v"}
         MINOR=$(echo $VERSION| cut -d'.' -f 1,2)
         MAJOR=$(echo $VERSION| cut -d'.' -f 1)
 
