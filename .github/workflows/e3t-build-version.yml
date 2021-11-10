@@ -20,14 +20,14 @@ jobs:
           token: ${{ secrets.READ_TOKEN }}
 
       - name: bundle fully derefenced openapi
-        uses: edact/o3t-github-actions/bundle-openapi@main
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
         with:
           output_filename: openapi-internal.yml
           dereference: true
           delete_files: false
 
       - name: bundle default openapi
-        uses: edact/o3t-github-actions/bundle-openapi@main
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
       - name: create auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
