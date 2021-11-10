@@ -16,6 +16,7 @@ runs:
   using: "composite"
   steps:
     - shell: bash
+      id: versions
       run: |
         # makes the script existing once an error occours
         set -euo pipefail
