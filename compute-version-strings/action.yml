@@ -8,10 +8,10 @@ runs:
     - shell: bash
       run: |
         # makes the script existing once an error occours
-        set -euo pipefail
+        # set -euo pipefail
 
         # compute values
-        VERSION=$(echo ${{ github.ref }}| cut -d'/' -f 3)
+        VERSION=$(echo '${{ github.ref }}'| cut -d'/' -f 3)
         MINOR=$(echo $VERSION| cut -d'.' -f 1,2)
         MAJOR=$(echo $VERSION| cut -d'.' -f 1)
 

@@ -38,7 +38,7 @@ jobs:
         uses: edact/o3t-github-actions/create-version-file@main
 
       - name: compute version strings
-        uses: ./.github/actions/compute-version-strings
+        uses: edact/o3t-github-actions/compute-version-strings@main
         id: versionGetter
 
       - name: build docker image
