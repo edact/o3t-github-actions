@@ -38,7 +38,7 @@ jobs:
           path: src/public/openapi.yml
 
       - name: lint openapi specification
-        uses: edact/o3t-github-actions/lint-openapi-spec@reusable-workflows
+        uses: edact/o3t-github-actions/lint-openapi-spec@main
 
   build-docker:
     name: build docker image
@@ -52,22 +52,22 @@ jobs:
           token: ${{ secrets.READ_TOKEN }}
 
       - name: bundle fully derefenced openapi
-        uses: edact/o3t-github-actions/bundle-openapi@reusable-workflows
+        uses: edact/o3t-github-actions/bundle-openapi@main
         with:
           output_path: src/public/openapi-internal.yml
           dereference: true
           delete_files: false
 
       - name: bundle default openapi
-        uses: edact/o3t-github-actions/bundle-openapi@reusable-workflows
+        uses: edact/o3t-github-actions/bundle-openapi@main
 
       - name: create auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@reusable-workflows
+        uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
       - name: create version file
-        uses: edact/o3t-github-actions/create-version-file@reusable-workflows
+        uses: edact/o3t-github-actions/create-version-file@main
 
       - name: build docker image
         uses: edact/o3t-github-actions/build-docker-image@main

@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: lint helm chart
-        uses: edact/o3t-github-actions/lint-helm-chart@reusable-workflows
+        uses: edact/o3t-github-actions/lint-helm-chart@main
 
   lint-oas:
     name: lint oas

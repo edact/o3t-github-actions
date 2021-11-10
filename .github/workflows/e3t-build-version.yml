@@ -35,7 +35,7 @@ jobs:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
       - name: create version file
-        uses: edact/o3t-github-actions/create-version-file@reusable-workflows
+        uses: edact/o3t-github-actions/create-version-file@main
 
       - name: compute version strings
         uses: ./.github/actions/compute-version-strings
