@@ -49,7 +49,7 @@ runs:
         echo "::group::Push helm chart"
         for chart_tag in $chart_tags
         do
-            helm chart save . ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ inputs.chart_name }}:${chart_tag}
-            helm chart push ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ inputs.chart_name }}:${chart_tag}
+            helm save . ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ inputs.chart_name }}:${chart_tag}
+            helm push ${{ inputs.helm_registry_url}}/${{ github.repository }}/${{ inputs.chart_name }}:${chart_tag}
         done
         echo "::endgroup::"
