@@ -2,22 +2,14 @@ name: "bundle openapi spec"
 description: "bundles multiple openapi files into one"
 author: "eDACT"
 inputs:
-  input_dir:
-    description: "directory of file that should be dereferenced"
+  input_path:
+    description: "path of file that should be dereferenced"
     required: false
-    default: "src/public"
-  output_dir:
-    description: "directory of output file"
+    default: "src/public/openapi-raw.yml"
+  output_path:
+    description: "path of output file"
     required: false
-    default: "src/public"
-  input_filename:
-    description: "name of file that should be dereferenced"
-    required: false
-    default: "openapi-raw.yml"
-  output_filename:
-    description: "name of output file"
-    required: false
-    default: "openapi.yml"
+    default: "src/public/openapi.yml"
   output_filetype:
     description: "json or yaml"
     required: false
@@ -34,7 +26,41 @@ inputs:
     description: "glob pattern to delete child openapi files relative to input path"
     required: false
     default: "**/*.oas.*"
-    
+
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        if [ ! -f "${{ inputs.input_path }}" ]; then
+            echo "::error::${{ inputs.input_path }} does not exist!"
+            exit 1
+        fi
+
+        # check if requested filetype is correct
+        if [ "${{ inputs.output_filetype }}" != "yaml" ] && [ "${{ inputs.output_filetype }}" != "json" ] ; then
+            echo "::error::FILETYPE must be either 'yaml' or 'json'!"
+            exit 1
+        fi
+
+        # bundle
+        echo "::group::Bundle file"
+        npx --package @apidevtools/swagger-cli swagger-cli bundle \
+            --outfile ${{ inputs.output_path }} \
+            --type ${{ inputs.output_filetype }} \
+            $( [ "${{ inputs.dereference }}" = true ] && printf %s "--dereference" ) \
+            ${{ inputs.input_path }}
+        echo "::endgroup::"
+
+
+        # delete sub files by glob
+        echo "::group::Delete sub files"
+        if [ "${{ inputs.delete_files }}" = true ] ; then
+            DIR=$(dirname "${{ inputs.input_path }}")
+            cd ${DIR}
+            rm ${{ inputs.delete_glob }} -v -f
+        fi
+        echo "::endgroup::"

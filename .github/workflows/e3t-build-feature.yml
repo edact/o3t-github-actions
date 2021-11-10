@@ -52,7 +52,7 @@ jobs:
           token: ${{ secrets.READ_TOKEN }}
 
       - name: bundle fully derefenced openapi
-        uses: edact/o3t-github-actions/bundle-openapi@main
+        uses: edact/o3t-github-actions/bundle-openapi@reusable-workflows
         with:
           output_filename: openapi-internal.yml
           dereference: true
