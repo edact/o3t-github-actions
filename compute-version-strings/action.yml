@@ -7,12 +7,12 @@ runs:
   steps:
     - shell: bash
       run: |
-        echo "Hallo Welt"
         # makes the script existing once an error occours
-        # set -euo pipefail
+        set -euo pipefail
 
         # compute values
         VERSION=$(echo '${{ github.ref }}'| cut -d'/' -f 3)
+        echo $VERSION
         MINOR=$(echo $VERSION| cut -d'.' -f 1,2)
         MAJOR=$(echo $VERSION| cut -d'.' -f 1)
 
