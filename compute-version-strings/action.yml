@@ -11,12 +11,9 @@ runs:
         set -euo pipefail
 
         # compute values
-        VERSION=$(echo '${{ github.ref }}'| cut -d'/' -f 3)
-        echo $VERSION
+        VERSION=$(echo '${{ github.ref }}'| cut -d'/v' -f 2)
         MINOR=$(echo $VERSION| cut -d'.' -f 1,2)
-        echo $MINOR
         MAJOR=$(echo $VERSION| cut -d'.' -f 1)
-        echo $MAJOR
 
         # set output for github actions
         echo "::set-output name=version_major::${MAJOR}"
