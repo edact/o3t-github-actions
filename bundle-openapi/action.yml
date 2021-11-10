@@ -32,6 +32,7 @@ runs:
   steps:
     - shell: bash
       run: |
+        docker -h
         # makes the script existing once an error occours
         set -euo pipefail
 
