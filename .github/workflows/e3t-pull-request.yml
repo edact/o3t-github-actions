@@ -23,6 +23,11 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@main
 
+      - name: create auth.json file
+        uses: edact/o3t-github-actions/create-authjson-file@main
+        with:
+          deploy_token: ${{ secrets.READ_TOKEN }}
+
       - name: lint php project
         uses: edact/o3t-github-actions/lint-php-project@main
 
