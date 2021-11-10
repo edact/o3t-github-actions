@@ -1,4 +1,4 @@
-name: "bundle openapi spec"
+name: "bundle openapi specification"
 description: "bundles multiple openapi files into one"
 author: "eDACT"
 inputs:
