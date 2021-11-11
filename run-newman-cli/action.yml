@@ -23,6 +23,6 @@ runs:
         # run newman
         echo "::group:: run newman"
         newman run https://api.getpostman.com/collections/${{ inputs.postman_collection_id }}?apikey=${{ inputs.postman_token }} \
-            --env-var baseUrl=nginx \
+            --env-var baseUrl=localhost:8080 \
             --reporters cli,htmlextra --reporter-htmlextra-export ./newman/report.html
         echo "::endgroup::"
