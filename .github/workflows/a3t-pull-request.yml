@@ -99,7 +99,7 @@ jobs:
 
   run-integration-tests:
     name: run integration tests
-    needs: [build-docker]
+    # needs: [build-docker]
     runs-on: ubuntu-latest
     services:
       nginx:
