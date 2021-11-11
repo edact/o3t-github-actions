@@ -112,6 +112,8 @@ jobs:
           RESOLVER: resolver 127.0.0.11 valid=30s;
         ports:
           - 8080:80
+        options: --health-interval 10s --health-retries 12 --health-start-period 10s
+
       php:
         image: registry.edact.de/edact/${{ github.event.repository.name }}/${{ github.event.repository.name }}:feature
         credentials:
