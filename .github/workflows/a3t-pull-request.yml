@@ -119,8 +119,8 @@ jobs:
           username: robot$publisher
           password: ${{ secrets.EPR_TOKEN }}
         volumes:
-          - ./configs/ldap.config.yaml:/var/www/config/ldap.config.yaml
-          - ./configs/auth.config.yaml:/var/www/config/auth.config.yaml
+          - configs/ldap.config.yaml:/var/www/config/ldap.config.yaml
+          - configs/auth.config.yaml:/var/www/config/auth.config.yaml
           # - ./configs/sql.config.yaml:/var/www/config/sql.config.yaml
         env:
           APP_DEBUG: true
