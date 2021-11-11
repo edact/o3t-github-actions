@@ -18,5 +18,5 @@ jobs:
         uses: edact/o3t-github-actions/build-helm-chart@main
         with:
           chart_name: ${{ github.event.repository.name }}
-          chart_tags: latest
+          chart_tags: 0.0.0-latest
           helm_registry_token: ${{ secrets.EHR_TOKEN }}

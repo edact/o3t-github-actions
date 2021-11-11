@@ -9,16 +9,16 @@ jobs:
   push-helm:
     name: push helm charts
     runs-on: ubuntu-latest
-    # steps:
-    #   - name: checkout repository
-    #     uses: actions/checkout@main
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
 
-    #   - name: lint helm chart
-    #     uses: edact/o3t-github-actions/lint-helm-chart@main
+      - name: lint helm chart
+        uses: edact/o3t-github-actions/lint-helm-chart@main
 
-    #   - name: build helm chart
-    #     uses: edact/o3t-github-actions/build-helm-chart@main
-    #     with:
-    #       chart_name: ${{ github.event.repository.name }}
-    #       chart_tags: feature
-    #       helm_registry_token: ${{ secrets.EHR_TOKEN }}
+      - name: build helm chart
+        uses: edact/o3t-github-actions/build-helm-chart@main
+        with:
+          chart_name: ${{ github.event.repository.name }}
+          chart_tags: 0.0.0-feature
+          helm_registry_token: ${{ secrets.EHR_TOKEN }}
