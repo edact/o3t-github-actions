@@ -116,7 +116,7 @@ jobs:
 
       - run: |
           echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
-          docker-compose up
+          docker-compose up --detached --wait
           curl localhost:101/rooms
 
   run-integration-tests:
