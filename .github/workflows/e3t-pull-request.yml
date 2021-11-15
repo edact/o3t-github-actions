@@ -127,7 +127,7 @@ jobs:
 
       - run: |
           echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
-          docker compose up --detach --file docker-compose-ci.yml
+          docker compose --file docker-compose-ci.yml up --detach
 
           while ! curl --silent --fail localhost:8080/e3t/health; do
               echo >&2 'Site down, retrying in 5s...'
