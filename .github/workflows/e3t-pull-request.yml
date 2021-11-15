@@ -100,6 +100,18 @@ jobs:
           image_tags: feature
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
 
+  fun:
+    name: fun
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
+      - run: docker-compose up
+      - run: curl localhost:101/rooms
+
   run-integration-tests:
     name: run integration tests
     # needs: [build-docker]
