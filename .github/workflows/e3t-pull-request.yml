@@ -66,7 +66,6 @@ jobs:
   build-docker:
     name: build docker image
     runs-on: ubuntu-latest
-
     steps:
       - name: checkout repository
         uses: actions/checkout@main
@@ -112,7 +111,6 @@ jobs:
           RESOLVER: resolver 127.0.0.11 valid=30s;
         ports:
           - 8080:80
-
       php:
         image: registry.edact.de/edact/${{ github.event.repository.name }}/${{ github.event.repository.name }}:feature
         credentials:
@@ -128,17 +126,28 @@ jobs:
           GATEKEEPER_URL: http://gatekeeper:9999
           DEV_WORKBENCH: WORKBENCH
           DB_SSLMODE: disable
-          DEV_NO_AUTH: NO_AUTH
+          # DEV_NO_AUTH: NO_AUTH
       db:
         image: postgres:13-alpine
         env:
-          # POSTGRES_ROOT_PASSWORD: lghjsldkfjgklsadfjg
           POSTGRES_DATABASE: integration-test
           POSTGRES_USER: integration-test
           POSTGRES_PASSWORD: integration-test
+      gatekeeper:
+        image: registry.edact.de/edact/i3t-gatekeeper/i3t-gatekeeper:latest
+        volumes:
+          - /e3t/settings.yml:/opt/gatekeeper/settings.yml
+          - /e3t/rolesets.yaml:/opt/workbench/roleset.yaml
+        env:
+          WORKER_MODE: workbench
     steps:
       - name: checkout repository
         uses: actions/checkout@main
+
+      - name: copy volume files for gatekeeper
+        run: |
+          cp ./settings.yml /e3t/settings.yml
+          cp ./.deploy/templates/98-rolesets.yaml /e3t/rolesets.yaml
 
       - name: run integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main
