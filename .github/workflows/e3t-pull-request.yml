@@ -153,8 +153,10 @@ jobs:
 
       - name: copy volume files for gatekeeper
         run: |
-          cp ./settings.yml /e3t/settings.yml
-          cp ./.deploy/templates/98-rolesets.yaml /e3t/rolesets.yaml
+          mkdir /e3t
+          cp ./settings.yml /e3t
+          cp ./.deploy/templates/98-rolesets.yaml /e3t
+          mv /e3t/98-rolesets.yml /e3t/rolesets.yml
 
       - name: run integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main
