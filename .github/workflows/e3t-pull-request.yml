@@ -153,7 +153,9 @@ jobs:
 
       - name: copy volume files for gatekeeper
         run: |
-          ls /e3t -a
+          echo $PWD
+          # ls /e3t -a
+          cat ./settings.yml
           cp ./settings.yml /e3t
           cp ./.deploy/templates/98-rolesets.yaml /e3t
           mv /e3t/98-rolesets.yml /e3t/rolesets.yml
