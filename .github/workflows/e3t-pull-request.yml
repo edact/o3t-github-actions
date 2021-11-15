@@ -116,9 +116,12 @@ jobs:
 
       - run: |
           echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
-          docker-compose up --detach --wait
-          sleep 15
-          curl localhost:101/e3t/health
+          docker-compose up --detach
+          while ! curl --silent --fail localhost:101/e3t/health; do
+              echo >&2 'Site down, retrying in 5s...'
+              sleep 5
+          done
+          echo >&2 'Site up, exiting'
 
   run-integration-tests:
     name: run integration tests
