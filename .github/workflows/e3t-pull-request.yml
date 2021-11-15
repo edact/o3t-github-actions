@@ -155,7 +155,7 @@ jobs:
 
       - name: copy volume files for gatekeeper
         run: |
-          chown -x /e3t
+          # chown -x /e3t
           echo $PWD
           echo "${{ github.workspace }}"
           # ls /e3t -a
