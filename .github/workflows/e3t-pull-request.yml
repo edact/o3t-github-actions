@@ -100,117 +100,41 @@ jobs:
           image_tags: feature
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
 
-  fun:
-    name: fun
+  run-integration-tests:
+    name: run integration tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
+        # with:
+        #   submodules: true
+        #   token: ${{ secrets.READ_TOKEN }}
 
-      - name: create auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@main
-        with:
-          deploy_token: ${{ secrets.READ_TOKEN }}
+      # - name: create auth.json file
+      #   uses: edact/o3t-github-actions/create-authjson-file@main
+      #   with:
+      #     deploy_token: ${{ secrets.READ_TOKEN }}
 
-      - name: bundle fully derefenced openapi
-        uses: edact/o3t-github-actions/bundle-openapi-spec@main
-        with:
-          output_path: src/public/openapi-internal.yml
-          dereference: true
-          delete_files: false
+      # - name: bundle fully derefenced openapi
+      #   uses: edact/o3t-github-actions/bundle-openapi-spec@main
+      #   with:
+      #     output_path: src/public/openapi-internal.yml
+      #     dereference: true
+      #     delete_files: false
 
-      - name: bundle default openapi
-        uses: edact/o3t-github-actions/bundle-openapi-spec@main
+      # - name: bundle default openapi
+      #   uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
       - run: |
           echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
-          docker-compose up --detach
+          docker compose up --detach --file docker-compose-ci.yml
+
           while ! curl --silent --fail localhost:8080/e3t/health; do
               echo >&2 'Site down, retrying in 5s...'
               sleep 5
           done
+
           echo >&2 'Site up, exiting'
-
-      - name: run integration tests
-        uses: edact/o3t-github-actions/run-newman-cli@main
-        with:
-          postman_token: ${{ secrets.POSTMAN_TOKEN }}
-          postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
-
-      - uses: actions/upload-artifact@main
-        if: always()
-        with:
-          name: fun-report
-          path: ./newman/report.html
-
-  run-integration-tests:
-    name: run integration tests
-    # needs: [build-docker]
-    runs-on: ubuntu-latest
-    services:
-      nginx:
-        image: registry.edact.de/edact/e3t-base-images/e3t-nginx:latest
-        credentials:
-          username: robot$publisher
-          password: ${{ secrets.EPR_TOKEN }}
-        env:
-          PHP_HOST: php
-          RESOLVER: resolver 127.0.0.11 valid=30s;
-        ports:
-          - 8080:80
-      php:
-        image: registry.edact.de/edact/${{ github.event.repository.name }}/${{ github.event.repository.name }}:feature
-        credentials:
-          username: robot$publisher
-          password: ${{ secrets.EPR_TOKEN }}
-        env:
-          APP_DEBUG: true
-          APP_ENV: local
-          DB_HOST: db
-          DB_DATABASE: integration-test
-          DB_USERNAME: integration-test
-          DB_PASSWORD: integration-test
-          GATEKEEPER_URL: http://gatekeeper:9999
-          DEV_WORKBENCH: WORKBENCH
-          DB_SSLMODE: disable
-          # DEV_NO_AUTH: NO_AUTH
-      db:
-        image: postgres:13-alpine
-        env:
-          POSTGRES_DATABASE: integration-test
-          POSTGRES_USER: integration-test
-          POSTGRES_PASSWORD: integration-test
-      gatekeeper:
-        image: registry.edact.de/edact/i3t-gatekeeper/i3t-gatekeeper:latest
-        credentials:
-          username: robot$publisher
-          password: ${{ secrets.EPR_TOKEN }}
-        volumes:
-          - /e3t/settings.yml:/opt/gatekeeper/settings.yml
-          - /e3t/rolesets.yaml:/opt/workbench/roleset.yaml
-        env:
-          WORKER_MODE: workbench
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@main
-
-      - name: copy volume files for gatekeeper
-        run: |
-          sudo rm -rf /e3t/settings.yml
-          sudo cp ./settings.yml /e3t
-          sudo rm -rf /e3t/rolesets.yml
-          sudo cp ./.deploy/templates/98-rolesets.yaml /e3t
-          sudo mv /e3t/98-rolesets.yaml /e3t/rolesets.yaml
-
-      - run: docker ps
-
-      - name: Restart gatekeeper
-        uses: docker://docker
-        with:
-          args: docker restart gatekeeper
 
       - name: run integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main
@@ -223,3 +147,81 @@ jobs:
         with:
           name: newman-report
           path: ./newman/report.html
+
+  # run-integration-tests:
+  #   name: run integration tests
+  #   # needs: [build-docker]
+  #   runs-on: ubuntu-latest
+  #   services:
+  #     nginx:
+  #       image: registry.edact.de/edact/e3t-base-images/e3t-nginx:latest
+  #       credentials:
+  #         username: robot$publisher
+  #         password: ${{ secrets.EPR_TOKEN }}
+  #       env:
+  #         PHP_HOST: php
+  #         RESOLVER: resolver 127.0.0.11 valid=30s;
+  #       ports:
+  #         - 8080:80
+  #     php:
+  #       image: registry.edact.de/edact/${{ github.event.repository.name }}/${{ github.event.repository.name }}:feature
+  #       credentials:
+  #         username: robot$publisher
+  #         password: ${{ secrets.EPR_TOKEN }}
+  #       env:
+  #         APP_DEBUG: true
+  #         APP_ENV: local
+  #         DB_HOST: db
+  #         DB_DATABASE: integration-test
+  #         DB_USERNAME: integration-test
+  #         DB_PASSWORD: integration-test
+  #         GATEKEEPER_URL: http://gatekeeper:9999
+  #         DEV_WORKBENCH: WORKBENCH
+  #         DB_SSLMODE: disable
+  #         # DEV_NO_AUTH: NO_AUTH
+  #     db:
+  #       image: postgres:13-alpine
+  #       env:
+  #         POSTGRES_DATABASE: integration-test
+  #         POSTGRES_USER: integration-test
+  #         POSTGRES_PASSWORD: integration-test
+  #     gatekeeper:
+  #       image: registry.edact.de/edact/i3t-gatekeeper/i3t-gatekeeper:latest
+  #       credentials:
+  #         username: robot$publisher
+  #         password: ${{ secrets.EPR_TOKEN }}
+  #       volumes:
+  #         - /e3t/settings.yml:/opt/gatekeeper/settings.yml
+  #         - /e3t/rolesets.yaml:/opt/workbench/roleset.yaml
+  #       env:
+  #         WORKER_MODE: workbench
+  #   steps:
+  #     - name: checkout repository
+  #       uses: actions/checkout@main
+
+  #     - name: copy volume files for gatekeeper
+  #       run: |
+  #         sudo rm -rf /e3t/settings.yml
+  #         sudo cp ./settings.yml /e3t
+  #         sudo rm -rf /e3t/rolesets.yml
+  #         sudo cp ./.deploy/templates/98-rolesets.yaml /e3t
+  #         sudo mv /e3t/98-rolesets.yaml /e3t/rolesets.yaml
+
+  #     - run: docker ps
+
+  #     - name: Restart gatekeeper
+  #       uses: docker://docker
+  #       with:
+  #         args: docker restart gatekeeper
+
+  #     - name: run integration tests
+  #       uses: edact/o3t-github-actions/run-newman-cli@main
+  #       with:
+  #         postman_token: ${{ secrets.POSTMAN_TOKEN }}
+  #         postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
+
+  #     - uses: actions/upload-artifact@main
+  #       if: always()
+  #       with:
+  #         name: newman-report
+  #         path: ./newman/report.html
