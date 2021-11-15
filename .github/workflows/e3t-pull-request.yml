@@ -143,22 +143,26 @@ jobs:
           username: robot$publisher
           password: ${{ secrets.EPR_TOKEN }}
         volumes:
-          - /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/settings.yml:/opt/gatekeeper/settings.yml
-          - /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/.deploy/templates/98-rolesets.yaml:/opt/workbench/roleset.yaml
+          # - ${{ github.event.repository.name }}/${{ github.event.repository.name }}/settings.yml:/opt/gatekeeper/settings.yml
+          # - /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/.deploy/templates/98-rolesets.yaml:/opt/workbench/roleset.yaml
+          - /e3t/settings.yml:/opt/gatekeeper/settings.yml
+          - /e3t/rolesets.yaml:/opt/workbench/roleset.yaml
         env:
           WORKER_MODE: workbench
     steps:
       - name: checkout repository
         uses: actions/checkout@main
 
-      # - name: copy volume files for gatekeeper
-      #   run: |
-      #     echo $PWD
-      #     # ls /e3t -a
-      #     cat ./settings.yml
-      #     cp ./settings.yml /e3t
-      #     cp ./.deploy/templates/98-rolesets.yaml /e3t
-      #     mv /e3t/98-rolesets.yml /e3t/rolesets.yml
+      - name: copy volume files for gatekeeper
+        run: |
+          echo $PWD
+          echo "${{ github.workspace }}"
+          # ls /e3t -a
+          # cat ./settings.yml
+          sudo rm /e3t/settings.yml
+          cp ./settings.yml /e3t
+          cp ./.deploy/templates/98-rolesets.yaml /e3t
+          mv /e3t/98-rolesets.yml /e3t/rolesets.yml
 
       - name: run integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main
