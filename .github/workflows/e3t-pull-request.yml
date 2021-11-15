@@ -127,7 +127,7 @@ jobs:
           DB_DATABASE: integration-test
           DB_USERNAME: integration-test
           DB_PASSWORD: integration-test
-          GATEKEEPER_URL: http://gatekeeper:9999
+          GATEKEEPER_URL: gatekeeper:9999
           DEV_WORKBENCH: WORKBENCH
           DB_SSLMODE: disable
           # DEV_NO_AUTH: NO_AUTH
