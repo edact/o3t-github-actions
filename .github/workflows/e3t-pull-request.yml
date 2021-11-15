@@ -117,11 +117,23 @@ jobs:
       - run: |
           echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
           docker-compose up --detach
-          while ! curl --silent --fail localhost:101/e3t/health; do
+          while ! curl --silent --fail localhost:8080/e3t/health; do
               echo >&2 'Site down, retrying in 5s...'
               sleep 5
           done
           echo >&2 'Site up, exiting'
+
+      - name: run integration tests
+        uses: edact/o3t-github-actions/run-newman-cli@main
+        with:
+          postman_token: ${{ secrets.POSTMAN_TOKEN }}
+          postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
+
+      - uses: actions/upload-artifact@main
+        if: always()
+        with:
+          name: fun-report
+          path: ./newman/report.html
 
   run-integration-tests:
     name: run integration tests
