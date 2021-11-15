@@ -130,7 +130,7 @@ jobs:
           GATEKEEPER_URL: http://gatekeeper:9999
           DEV_WORKBENCH: WORKBENCH
           DB_SSLMODE: disable
-          DEV_NO_AUTH: NO_AUTH
+          # DEV_NO_AUTH: NO_AUTH
       db:
         image: postgres:13-alpine
         env:
@@ -155,11 +155,6 @@ jobs:
 
       - name: copy volume files for gatekeeper
         run: |
-          # chown -x /e3t
-          # echo $PWD
-          # echo "${{ github.workspace }}"
-          # ls /e3t -a
-          # cat ./settings.yml
           sudo rm -rf /e3t/settings.yml
           sudo cp ./settings.yml /e3t
           sudo rm -rf /e3t/rolesets.yml
