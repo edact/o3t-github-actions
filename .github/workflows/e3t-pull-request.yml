@@ -135,6 +135,9 @@ jobs:
           POSTGRES_PASSWORD: integration-test
       gatekeeper:
         image: registry.edact.de/edact/i3t-gatekeeper/i3t-gatekeeper:latest
+        credentials:
+          username: robot$publisher
+          password: ${{ secrets.EPR_TOKEN }}
         volumes:
           - /e3t/settings.yml:/opt/gatekeeper/settings.yml
           - /e3t/rolesets.yaml:/opt/workbench/roleset.yaml
