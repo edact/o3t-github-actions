@@ -109,10 +109,21 @@ jobs:
         with:
           submodules: true
           token: ${{ secrets.READ_TOKEN }}
+
       - name: create auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: bundle fully derefenced openapi
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
+        with:
+          output_path: src/public/openapi-internal.yml
+          dereference: true
+          delete_files: false
+
+      - name: bundle default openapi
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
       - run: |
           echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
