@@ -155,14 +155,16 @@ jobs:
 
       - name: copy volume files for gatekeeper
         run: |
+          chown -x /e3t
           echo $PWD
           echo "${{ github.workspace }}"
           # ls /e3t -a
           # cat ./settings.yml
           sudo rm -rf /e3t/settings.yml
-          cp ./settings.yml /e3t
-          cp ./.deploy/templates/98-rolesets.yaml /e3t
-          mv /e3t/98-rolesets.yml /e3t/rolesets.yml
+          sudo cp ./settings.yml /e3t
+          sudo rm -rf /e3t/rolesets.yml
+          sudo cp ./.deploy/templates/98-rolesets.yaml /e3t
+          sudo mv /e3t/98-rolesets.yml /e3t/rolesets.yml
 
       - name: run integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main
