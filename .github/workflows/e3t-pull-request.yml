@@ -109,8 +109,10 @@ jobs:
         with:
           submodules: true
           token: ${{ secrets.READ_TOKEN }}
-      - run: docker-compose up
-      - run: curl localhost:101/rooms
+      - run: |
+          echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
+          docker-compose up
+          curl localhost:101/rooms
 
   run-integration-tests:
     name: run integration tests
@@ -170,6 +172,8 @@ jobs:
           sudo rm -rf /e3t/rolesets.yml
           sudo cp ./.deploy/templates/98-rolesets.yaml /e3t
           sudo mv /e3t/98-rolesets.yaml /e3t/rolesets.yaml
+
+      - run: docker ps
 
       - name: Restart gatekeeper
         uses: docker://docker
