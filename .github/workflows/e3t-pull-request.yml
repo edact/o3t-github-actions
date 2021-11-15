@@ -127,7 +127,7 @@ jobs:
           DB_DATABASE: integration-test
           DB_USERNAME: integration-test
           DB_PASSWORD: integration-test
-          GATEKEEPER_URL: gatekeeper
+          GATEKEEPER_URL: http://gatekeeper:9999
           DEV_WORKBENCH: WORKBENCH
           DB_SSLMODE: disable
           # DEV_NO_AUTH: NO_AUTH
@@ -143,8 +143,6 @@ jobs:
           username: robot$publisher
           password: ${{ secrets.EPR_TOKEN }}
         volumes:
-          # - ${{ github.event.repository.name }}/${{ github.event.repository.name }}/settings.yml:/opt/gatekeeper/settings.yml
-          # - /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/.deploy/templates/98-rolesets.yaml:/opt/workbench/roleset.yaml
           - /e3t/settings.yml:/opt/gatekeeper/settings.yml
           - /e3t/rolesets.yaml:/opt/workbench/roleset.yaml
         env:
@@ -160,6 +158,11 @@ jobs:
           sudo rm -rf /e3t/rolesets.yml
           sudo cp ./.deploy/templates/98-rolesets.yaml /e3t
           sudo mv /e3t/98-rolesets.yaml /e3t/rolesets.yaml
+
+      - name: Restart gatekeeper
+        uses: docker://docker
+        with:
+          args: docker restart gatekeeper
 
       - name: run integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main
