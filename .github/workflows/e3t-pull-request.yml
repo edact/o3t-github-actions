@@ -164,6 +164,7 @@ jobs:
           sudo cp ./settings.yml /e3t
           sudo rm -rf /e3t/rolesets.yml
           sudo cp ./.deploy/templates/98-rolesets.yaml /e3t
+          ls /e3t
           sudo mv /e3t/98-rolesets.yml /e3t/rolesets.yml
 
       - name: run integration tests
