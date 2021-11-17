@@ -50,7 +50,7 @@ runs:
 
         RETRIES=0
 
-        while ! ${{ inputs.healthcheck }}; do
+        while ! ${{ inputs.healthcheck_command }}; do
             if [["$RETRIES" > "${{ inputs.healthcheck_limit }}"]]; then
               echo "::error::Limit of ${{ inputs.healthcheck_limit }} reached."
             fi
