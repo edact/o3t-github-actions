@@ -83,4 +83,4 @@ jobs:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
-          # use_cache: true
+          use_cache: true
