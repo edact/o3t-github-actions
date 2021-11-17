@@ -38,11 +38,76 @@ inputs:
   use_cache:
     description: ""
     required: false
-    default: "false"
+    default: "true"
   cache_tags:
     description: ""
     required: false
 
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "composite"
+  steps:
+    - shell: bash
+      env:
+        DOCKER_REGISTRY_URL: ${{ inputs.docker_registry_url }}
+        DOCKER_REGISTRY_USER: ${{ inputs.docker_registry_user }}
+        DOCKER_REGISTRY_TOKEN: ${{ inputs.docker_registry_token }}
+        WORKING_DIRECTORY: ${{ inputs.working_directory }}
+        IMAGE_NAME: ${{ inputs.image_name }}
+        IMAGE_TAGS: ${{ inputs.image_tags }}
+        BUILD_BASE_TAG: ${{ inputs.build_base_tag }}
+        TARGET_STAGE: ${{ inputs.target_stage }}
+        DOCKERFILE: ${{ inputs.dockerfile }}
+        USE_CACHE: ${{ inputs.use_cache }}
+        CACHE_TAGS: ${{ inputs.cache_tags }}
+      run: |
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        # switch to working directory
+        cd ${WORKING_DIRECTORY}
+
+        # log into docker registry
+        echo ${DOCKER_REGISTRY_TOKEN} | docker login -u ${DOCKER_REGISTRY_USER} --password-stdin ${DOCKER_REGISTRY_URL}
+
+        FULL_IMAGE_NAME=${DOCKER_REGISTRY_URL}/${GITHUB_REPOSITORY}/${IMAGE_NAME}
+
+        # split image tags in array
+        IMAGE_TAGS=$(echo $IMAGE_TAGS | tr ", " "\n")
+
+
+        if [ "$USE_CACHE" = true ] ; then
+            echo "::group:: Downloading image tags for caching.."
+            # docker build should use previous images of the tags provided as cache
+            CACHE_TAGS=${CACHE_TAGS:-"$IMAGE_TAGS"}
+            CACHE_TAGS=$(echo $CACHE_TAGS | tr ", " "\n")
+            CACHE_FROM_STRING=""
+
+            for CACHE_TAG in $CACHE_TAGS
+            do
+                docker pull ${FULL_IMAGE_NAME}:${CACHE_TAG} --quiet || true
+                CACHE_FROM_STRING=${CACHE_FROM_STRING}" --cache-from=${FULL_IMAGE_NAME}:${CACHE_TAG}"
+            done
+            echo "::endgroup::"
+        fi
+
+        # build image
+        echo "::group::Build image"
+        docker build \
+            --build-arg=DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
+            --build-arg=BASE_TAG=${BUILD_BASE_TAG} \
+            $( [ -n "$TARGET_STAGE" ] && printf %s "--target $TARGET_STAGE" ) \
+            $( [ "$USE_CACHE" = true ] && [ -n "$CACHE_TAGS" ] && printf %s "$CACHE_FROM_STRING" ) \
+            --file $DOCKERFILE \
+            --tag tempcontainer:latest .
+        echo "::endgroup::"
+
+        # set tags
+        for IMAGE_TAG in $IMAGE_TAGS
+        do
+            docker tag tempcontainer:latest ${FULL_IMAGE_NAME}:${IMAGE_TAG}
+        done
+
+        # push image to registry
+        echo "::group::Push image"
+        docker push ${FULL_IMAGE_NAME} --all-tags
+        echo "::endgroup::"
