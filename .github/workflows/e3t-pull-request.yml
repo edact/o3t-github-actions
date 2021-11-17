@@ -130,7 +130,7 @@ jobs:
         with:
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
           file: docker-compose-ci.yml
-          healthcheck: curl --silent --fail localhost:8080/e3t/health
+          healthcheck_command: curl --silent --fail localhost:8080/e3t/health
 
       - name: Running integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main

@@ -17,10 +17,22 @@ inputs:
   docker_registry_token:
     description: "token for registry"
     required: true
-  healthcheck:
+  healthcheck_command:
     description: "Bash command to execute until true."
     required: false
     default: 1 == 1
+  healthcheck_offset:
+    description: "Amount of seconds to wait before executing the first healthcheck."
+    required: false
+    default: "10"
+  healthcheck_limit:
+    description: "Amount of maximum retries of the healthcheck."
+    required: false
+    default: "12"
+  healthcheck_timeout:
+    description: "Amount of seconds to wait before retrying a healthcheck."
+    required: false
+    default: "5"
 
 runs:
   using: "composite"
@@ -31,9 +43,22 @@ runs:
 
         docker compose --file ${{ inputs.file }} up --detach --quiet-pull
 
+        if [["${{ inputs.healthcheck_timeout }}" > '0']]; then
+          echo "Waiting ${{ inputs.healthcheck_timeout}} seconds before executing first healthcheck.."
+          sleep ${{ inputs.healthcheck_timeout }}
+        fi
+
+        RETRIES=0
+
         while ! ${{ inputs.healthcheck }}; do
-            echo >&2 'Health check failed, retrying in 5s...'
-            sleep 5
+            if [["$RETRIES" > "${{ inputs.healthcheck_limit }}"]]; then
+              echo "::error::Limit of ${{ inputs.healthcheck_limit }} reached."
+            fi
+
+            echo >&2 'Health check failed, retrying in ${{ inputs.healthcheck_timeout }} seconds..'
+            sleep ${{ inputs.healthcheck_timeout }}
+
+            RETRIES=$RETRIES+1
         done
 
         echo >&2 'Health check succeeded.'
