@@ -55,10 +55,10 @@ runs:
               echo "::error::Limit of ${{ inputs.healthcheck_limit }} reached."
             fi
 
-            echo >&2 'Health check failed, retrying in ${{ inputs.healthcheck_timeout }} seconds..'
+            echo 'Health check failed, retrying in ${{ inputs.healthcheck_timeout }} seconds..'
             sleep ${{ inputs.healthcheck_timeout }}
 
             RETRIES=$RETRIES+1
         done
 
-        echo >&2 'Health check succeeded.'
+        echo 'Health check succeeded.'
