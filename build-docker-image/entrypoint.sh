@@ -16,7 +16,7 @@ IMAGE_TAGS=$(echo $INPUT_IMAGE_TAGS | tr ", " "\n")
 
 
 if [ "$INPUT_USE_CACHE" = true ] ; then
-
+    echo "::group:: Downloading image tags for caching.."
     # docker build should use previous images of the tags provided as cache
     INPUT_CACHE_TAGS=${INPUT_CACHE_TAGS:-"$INPUT_IMAGE_TAGS"}
     CACHE_TAGS=$(echo $INPUT_CACHE_TAGS | tr ", " "\n")
@@ -27,6 +27,7 @@ if [ "$INPUT_USE_CACHE" = true ] ; then
         docker pull ${FULL_IMAGE_NAME}:${CACHE_TAG} --quiet || true
         CACHE_FROM_STRING=${CACHE_FROM_STRING}" --cache-from=${FULL_IMAGE_NAME}:${CACHE_TAG}"
     done
+    echo "::endgroup::"
 fi
 
 # build image
