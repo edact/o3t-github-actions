@@ -43,7 +43,7 @@ runs:
 
         docker compose --file ${{ inputs.file }} up --detach --quiet-pull
 
-        if [['${{ inputs.healthcheck_timeout }}' > '0']]; then
+        if [[ '${{ inputs.healthcheck_timeout }}' > '0' ]]; then
           echo "Waiting ${{ inputs.healthcheck_timeout}} seconds before executing first healthcheck.."
           sleep ${{ inputs.healthcheck_timeout }}
         fi
@@ -51,7 +51,7 @@ runs:
         RETRIES=0
 
         while ! ${{ inputs.healthcheck_command }}; do
-            if [["$RETRIES" > "${{ inputs.healthcheck_limit }}"]]; then
+            if [[ "$RETRIES" > "${{ inputs.healthcheck_limit }}" ]]; then
               echo "::error::Limit of ${{ inputs.healthcheck_limit }} reached."
             fi
 
