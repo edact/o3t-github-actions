@@ -24,11 +24,11 @@ inputs:
   healthcheck_offset:
     description: "Amount of seconds to wait before executing the first healthcheck."
     required: false
-    default: "10"
+    default: "0"
   healthcheck_limit:
     description: "Amount of maximum retries of the healthcheck."
     required: false
-    default: "12"
+    default: "18"
   healthcheck_timeout:
     description: "Amount of seconds to wait before retrying a healthcheck."
     required: false
@@ -43,22 +43,23 @@ runs:
 
         docker compose --file ${{ inputs.file }} up --detach --quiet-pull
 
-        if [[ '${{ inputs.healthcheck_timeout }}' > '0' ]]; then
-          echo "Waiting ${{ inputs.healthcheck_timeout}} seconds before executing first healthcheck.."
-          sleep ${{ inputs.healthcheck_timeout }}
+        if (( ${{ inputs.healthcheck_offset }} > 0 )); then
+          echo "Waiting ${{ inputs.healthcheck_offset }} seconds before executing first healthcheck.."
+          sleep ${{ inputs.healthcheck_offset }}
         fi
 
         RETRIES=0
 
         while ! ${{ inputs.healthcheck_command }}; do
-            if [[ "$RETRIES" > "${{ inputs.healthcheck_limit }}" ]]; then
+            RETRIES=$(($RETRIES + 1))
+
+            if (( $RETRIES >= ${{ inputs.healthcheck_limit }} )); then
               echo "::error::Limit of ${{ inputs.healthcheck_limit }} reached."
+              exit 1
             fi
 
-            echo >&2 'Health check failed, retrying in ${{ inputs.healthcheck_timeout }} seconds..'
+            echo >&2 "Health check failed, retrying in ${{ inputs.healthcheck_timeout }} seconds.."
             sleep ${{ inputs.healthcheck_timeout }}
-
-            RETRIES=$RETRIES+1
         done
 
         echo >&2 'Health check succeeded.'
