@@ -104,45 +104,42 @@ jobs:
     name: run integration tests
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Checking repository out
         uses: actions/checkout@main
-        # with:
-        #   submodules: true
-        #   token: ${{ secrets.READ_TOKEN }}
+        with:
+          submodules: true
+          token: ${{ secrets.READ_TOKEN }}
 
-      # - name: create auth.json file
-      #   uses: edact/o3t-github-actions/create-authjson-file@main
-      #   with:
-      #     deploy_token: ${{ secrets.READ_TOKEN }}
+      - name: Creating auth.json file
+        uses: edact/o3t-github-actions/create-authjson-file@main
+        with:
+          deploy_token: ${{ secrets.READ_TOKEN }}
 
-      # - name: bundle fully derefenced openapi
-      #   uses: edact/o3t-github-actions/bundle-openapi-spec@main
-      #   with:
-      #     output_path: src/public/openapi-internal.yml
-      #     dereference: true
-      #     delete_files: false
+      - name: Bundling openapi.yml
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
-      # - name: bundle default openapi
-      #   uses: edact/o3t-github-actions/bundle-openapi-spec@main
+      - name: Bundling openapi-internal.yml
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
+        with:
+          output_path: src/public/openapi-internal.yml
+          dereference: true
+          delete_files: false
 
-      - run: |
-          echo "${{ secrets.EPR_TOKEN }}" | docker login -u 'robot$publisher' --password-stdin registry.edact.de
-          docker compose --file docker-compose-ci.yml up --detach
+      - name: Running docker compose setup
+        uses: edact/o3t-github-actions/run-docker-compose@add-gatekeeper
+        with:
+          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+          file: docker-compose-ci.yml
+          healthcheck: curl --silent --fail localhost:8080/e3t/health
 
-          while ! curl --silent --fail localhost:8080/e3t/health; do
-              echo >&2 'Site down, retrying in 5s...'
-              sleep 5
-          done
-
-          echo >&2 'Site up, exiting'
-
-      - name: run integration tests
+      - name: Running integration tests
         uses: edact/o3t-github-actions/run-newman-cli@main
         with:
           postman_token: ${{ secrets.POSTMAN_TOKEN }}
           postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
 
-      - uses: actions/upload-artifact@main
+      - name: Uploading newman report
+        uses: actions/upload-artifact@main
         if: always()
         with:
           name: newman-report

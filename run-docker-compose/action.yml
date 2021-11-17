@@ -1,0 +1,39 @@
+name: "run docker compose"
+description: "Logs into docker registry and runs docker compose up -d"
+author: "eDACT"
+inputs:
+  file:
+    description: "Compose file to run."
+    default: "docker-compose.yml"
+    required: false
+  docker_registry_url:
+    description: "URL of the docker registry, no trailing slashes"
+    required: false
+    default: "registry.edact.de"
+  docker_registry_user:
+    description: "user for registry"
+    required: false
+    default: "robot$publisher"
+  docker_registry_token:
+    description: "token for registry"
+    required: true
+  healthcheck:
+    description: "Bash command to execute until true."
+    required: false
+    default: 1 == 1
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        echo "${{ inputs.docker_registry_token }}" | docker login -u '${{ inputs.docker_registry_user }}' --password-stdin ${{ inputs.docker_registry_url }}
+
+        docker compose --file ${{ inputs.file }} up --detach
+
+        while ! ${{ inputs.healthcheck }}; do
+            echo >&2 'Health check failed, retrying in 5s...'
+            sleep 5
+        done
+
+        echo >&2 'Health check succeeded.'
