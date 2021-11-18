@@ -13,20 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
         with:
           submodules: true
           token: ${{ secrets.READ_TOKEN }}
 
-      - name: bundle fully derefenced openapi
+      - name: Bundling openapi-internal.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
         with:
           output_path: src/public/openapi-internal.yml
           dereference: true
           delete_files: false
 
-      - name: bundle default openapi
+      - name: Bundling openapi.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
       - name: create auth.json file
@@ -34,10 +34,10 @@ jobs:
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
-      - name: create version file
+      - name: Creating version.json file
         uses: edact/o3t-github-actions/create-version-file@main
 
-      - name: build docker image
+      - name: Building docker image
         uses: edact/o3t-github-actions/build-docker-image@main
         with:
           image_name: ${{ github.event.repository.name }}

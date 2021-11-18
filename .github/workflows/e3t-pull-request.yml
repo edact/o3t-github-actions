@@ -20,47 +20,47 @@ jobs:
     name: lint php
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
 
-      - name: create auth.json file
+      - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
-      - name: lint php project
+      - name: Linting php project
         uses: edact/o3t-github-actions/lint-php-project@main
 
   lint-helm:
     name: lint helm
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
 
-      - name: lint helm chart
+      - name: Linting helm chart
         uses: edact/o3t-github-actions/lint-helm-chart@main
 
   lint-oas:
     name: lint oas
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
         with:
           submodules: true
           token: ${{ secrets.READ_TOKEN }}
 
-      - name: bundle default openapi
+      - name: Bundling openapi.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
-      - name: upload bundled openapi
+      - name: Uploading bundled openapi.yml
         uses: actions/upload-artifact@main
         with:
           name: bundled-openapi
           path: src/public/openapi.yml
 
-      - name: lint openapi specification
+      - name: Linting openapi specification
         uses: edact/o3t-github-actions/lint-openapi-spec@main
 
   run-integration-tests:
@@ -71,7 +71,7 @@ jobs:
       - lint-oas
       - lint-php
     steps:
-      - name: Checking repository out
+      - name: Fetching repository
         uses: actions/checkout@main
         with:
           submodules: true
