@@ -72,7 +72,7 @@ jobs:
         uses: edact/o3t-github-actions/create-version-file@main
 
       - name: Building docker image
-        uses: edact/o3t-github-actions/build-docker-image@add-gatekeeper
+        uses: edact/o3t-github-actions/build-docker-image@improvements
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature

@@ -87,7 +87,7 @@ jobs:
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
       - name: Running docker compose setup
-        uses: edact/o3t-github-actions/run-docker-compose@add-gatekeeper
+        uses: edact/o3t-github-actions/run-docker-compose@improvements
         with:
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
           file: docker-compose-ci.yml
