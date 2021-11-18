@@ -1,5 +1,5 @@
 name: "check npm package"
-description: "checks npm package for mistakes that should not be merged into main"
+description: "Checks npm package for errors that should not be merged into main by running tests and linters."
 author: "eDACT"
 
 runs:

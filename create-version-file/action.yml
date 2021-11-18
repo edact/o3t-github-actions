@@ -1,5 +1,5 @@
 name: "Create version file"
-description: "Create version file containing commit information."
+description: "Creates version file containing commit information."
 
 runs:
   using: "composite"

@@ -1,9 +1,9 @@
 name: "lint helm v3"
-description: "lints a helm chart"
+description: "Lints a helm chart."
 author: "eDACT"
 inputs:
   working_directory:
-    description: "working directory the action should be performed in"
+    description: "Working directory the action should be performed in."
     default: ".deploy"
     required: false
 

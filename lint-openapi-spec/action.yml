@@ -1,9 +1,9 @@
-name: "lint openapi file"
-description: "lints a given openapi file with spectral"
+name: "lint openapi specification"
+description: "Lints a given openapi specification with spectral."
 author: "eDACT"
 inputs:
   input_path:
-    description: "path to file that should linted"
+    description: "Path to file that should linted."
     required: false
     default: "src/public/openapi.yml"
 

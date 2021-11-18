@@ -1,5 +1,5 @@
 name: "build npm package"
-description: "builds npm package"
+description: "Installs dependencies and builds npm package."
 author: "eDACT"
 
 runs:

@@ -1,17 +1,17 @@
 name: "create auth.json file for composer"
-description: "creates auth.json file needed for composer"
+description: "Creates auth.json file needed for private package registries in composer."
 author: "eDACT"
 inputs:
   registry_url:
-    description: "URL of the registry, no trailing slashes"
+    description: "URL of the registry, no trailing slashes."
     default: "github.com"
     required: false
   location:
-    description: "location for generated file, no trailing slashes"
+    description: "Location for generated file, no trailing slashes."
     default: src
     required: false
   deploy_token:
-    description: "deploy token for private packages"
+    description: "Deploy token for private package registries."
     required: true
 
 runs:

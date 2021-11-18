@@ -1,5 +1,5 @@
 name: "run docker compose"
-description: "Logs into docker registry and runs docker compose up -d"
+description: "Logs into docker registry, runs docker compose up -d and waits for the services to be healthy."
 author: "eDACT"
 inputs:
   file:
@@ -7,15 +7,15 @@ inputs:
     default: "docker-compose.yml"
     required: false
   docker_registry_url:
-    description: "URL of the docker registry, no trailing slashes"
+    description: "URL of the docker registry, no trailing slashes."
     required: false
     default: "registry.edact.de"
   docker_registry_user:
-    description: "user for registry"
+    description: "Username for the docker registry."
     required: false
     default: "robot$publisher"
   docker_registry_token:
-    description: "token for registry"
+    description: "Token / password of the user for the docker registry."
     required: true
   healthcheck_command:
     description: "Bash command to execute until true."

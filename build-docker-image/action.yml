@@ -1,46 +1,46 @@
 name: "build docker image"
-description: "builds docker image"
+description: "Logs into a docker registry, builds, tags and pushes a docker image."
 author: "eDACT"
 
 inputs:
   docker_registry_url:
-    description: "URL of the docker registry, no trailing slashes"
+    description: "URL of the docker registry, no trailing slashes."
     required: false
     default: "registry.edact.de"
   docker_registry_user:
-    description: "user for registry"
+    description: "Username for docker registry."
     required: false
     default: "robot$publisher"
   docker_registry_token:
-    description: "token for registry"
+    description: "Token / password of the username for docker registry."
     required: true
   working_directory:
-    description: "working directory the action should be performed in"
+    description: "Working directory the action should be performed in."
     required: false
     default: "."
   image_name:
-    description: "name of the image"
+    description: "Name of the docker image."
     required: true
   image_tags:
-    description: "list of tags, seperated by comma"
+    description: "List of tags for the docker image, seperated by comma."
     required: true
   build_base_tag:
-    description: "tag for images the new image should be built upon"
+    description: "Tag for images the new image should be built upon."
     required: false
     default: latest
   target_stage:
-    description: ""
+    description: "Target stage for the newly built docker image."
     required: false
   dockerfile:
-    description: ""
+    description: "Path of the Dockerfile to build."
     required: false
     default: "Dockerfile"
   use_cache:
-    description: ""
+    description: "Flag wether to download image tags to use as cache when building."
     required: false
     default: "true"
   cache_tags:
-    description: ""
+    description: "List of tags of the docker image to use as cache, seperated by comma. If omitted, image_tags is used as cache_tags."
     required: false
 
 runs:
