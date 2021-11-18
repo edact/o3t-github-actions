@@ -20,7 +20,7 @@ inputs:
   healthcheck_command:
     description: "Bash command to execute until true."
     required: false
-    default: 1 == 1
+    default: ls
   healthcheck_offset:
     description: "Amount of seconds to wait before executing the first healthcheck."
     required: false
@@ -39,9 +39,17 @@ runs:
   steps:
     - shell: bash
       run: |
-        echo "${{ inputs.docker_registry_token }}" | docker login -u '${{ inputs.docker_registry_user }}' --password-stdin ${{ inputs.docker_registry_url }}
+        #
+        # makes the script existing once an error occours
+        set -euo pipefail
 
+        echo "::group::Logging into docker registry.."
+        echo "${{ inputs.docker_registry_token }}" | docker login -u '${{ inputs.docker_registry_user }}' --password-stdin ${{ inputs.docker_registry_url }}
+        echo "::endgroup::"
+
+        echo "::group::Starting compose service.."
         docker compose --file ${{ inputs.file }} up --detach --quiet-pull
+        echo "::endgroup::"
 
         if (( ${{ inputs.healthcheck_offset }} > 0 )); then
           echo "Waiting ${{ inputs.healthcheck_offset }} seconds before executing first healthcheck.."

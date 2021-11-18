@@ -7,16 +7,17 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
-        set -e
+        set -euo pipefail
 
         # install dependencies
-        echo "::group::Install dependencies"
+        echo "::group::Installing dependencies.."
         npm install
         echo "::endgroup::"
 
         # run tests specified in package.json
-        echo "::group::Run tests"
+        echo "::group::Running tests.."
         npm run test --if-present
         echo "::endgroup::"
 
@@ -24,6 +25,6 @@ runs:
         export NODE_ENV="production"
 
         # lint project
-        echo "::group::Run linter"
+        echo "::group::Running linter.."
         npm run lint --if-present --no-fix
         echo "::endgroup::"

@@ -19,6 +19,7 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 

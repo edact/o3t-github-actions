@@ -60,6 +60,7 @@ runs:
         USE_CACHE: ${{ inputs.use_cache }}
         CACHE_TAGS: ${{ inputs.cache_tags }}
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
@@ -67,7 +68,9 @@ runs:
         cd ${WORKING_DIRECTORY}
 
         # log into docker registry
+        echo "::group::Logging into docker registry.."
         echo ${DOCKER_REGISTRY_TOKEN} | docker login -u ${DOCKER_REGISTRY_USER} --password-stdin ${DOCKER_REGISTRY_URL}
+        echo "::endgroup::"
 
         FULL_IMAGE_NAME=${DOCKER_REGISTRY_URL}/${GITHUB_REPOSITORY}/${IMAGE_NAME}
 
@@ -91,7 +94,7 @@ runs:
         fi
 
         # build image
-        echo "::group::Build image"
+        echo "::group::Building docker image.."
         docker build \
             --build-arg=DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
             --build-arg=BASE_TAG=${BUILD_BASE_TAG} \
@@ -102,12 +105,14 @@ runs:
         echo "::endgroup::"
 
         # set tags
+        echo "::group::Tagging docker image.."
         for IMAGE_TAG in $IMAGE_TAGS
         do
             docker tag tempcontainer:latest ${FULL_IMAGE_NAME}:${IMAGE_TAG}
         done
+        echo "::endgroup::"
 
         # push image to registry
-        echo "::group::Push image"
+        echo "::group::Pushing docker image.."
         docker push ${FULL_IMAGE_NAME} --all-tags
         echo "::endgroup::"

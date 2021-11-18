@@ -7,4 +7,8 @@ runs:
     - name: generate json file with commit details
       shell: bash
       run: |
+        #
+        # makes the script existing once an error occours
+        set -euo pipefail
+
         echo '{ "commit": "${{ github.sha }}","ref": "${{ github.ref }}","base_ref": "${{ github.base_ref }}" }' > ./src/public/version.json

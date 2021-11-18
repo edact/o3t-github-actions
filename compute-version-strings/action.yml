@@ -18,6 +18,7 @@ runs:
     - shell: bash
       id: versions
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
@@ -31,6 +32,9 @@ runs:
         echo "::set-output name=version_major::${MAJOR}"
         echo "::set-output name=version_minor::${MINOR}"
         echo "::set-output name=version_patch::${VERSION}"
-        echo $VERSION
-        echo $MINOR
-        echo $MAJOR
+
+        echo "::group::Generating version strings.."
+        echo "Major version: ${MAJOR}";
+        echo "Minor version: ${MINOR}";
+        echo "Patch version: ${VERSION}";
+        echo "::endgroup::"

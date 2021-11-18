@@ -1,5 +1,10 @@
 name: "Lint PHP"
 description: "Lint PHP Project using PHP CS-Fixer."
+inputs:
+  working_directory:
+    description: "Working directory in which to run the linter."
+    required: false
+    default: "src"
 
 runs:
   using: "composite"
@@ -7,6 +12,17 @@ runs:
     - name: install dependencies & run linter
       shell: bash
       run: |
-        cd src
+        #
+        # makes the script existing once an error occours
+        set -euo pipefail
+
+        # switch working directory
+        cd ${{ inputs.working_directory }}
+
+        echo "::group::Installing dependencies.."
         composer install --quiet
+        echo "::endgroup::"
+
+        echo "::group::Linting php project.."
         composer lint-dry
+        echo "::endgroup::"

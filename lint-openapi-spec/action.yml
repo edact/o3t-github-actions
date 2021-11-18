@@ -12,6 +12,7 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
@@ -21,9 +22,11 @@ runs:
         fi
 
         # install
+        echo "::group::Installing linter.."
         npm i @stoplight/spectral@^5.0.0 --global --quiet
+        echo "::endgroup::"
 
-        echo "::group::linting results"
         # lint
+        echo "::group::Linting openapi specification.."
         spectral lint ${{ inputs.input_path }} --skip-rule oas3-unused-components-schema
         echo "::endgroup::"

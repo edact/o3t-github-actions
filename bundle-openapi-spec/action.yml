@@ -32,6 +32,7 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
@@ -47,7 +48,7 @@ runs:
         fi
 
         # bundle
-        echo "::group::Bundle file"
+        echo "::group::Bundling openapi specification.."
         npx --package @apidevtools/swagger-cli swagger-cli bundle \
             --outfile ${{ inputs.output_path }} \
             --type ${{ inputs.output_filetype }} \
@@ -57,7 +58,7 @@ runs:
 
 
         # delete sub files by glob
-        echo "::group::Delete sub files"
+        echo "::group::Deleting files that are now bundled into the main specification.."
         if [ "${{ inputs.delete_files }}" = true ] ; then
             DIR=$(dirname "${{ inputs.input_path }}")
             cd ${DIR}
