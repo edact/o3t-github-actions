@@ -1,5 +1,5 @@
 name: "check npm package"
-description: "checks npm package for mistakes that should not be merged into main"
+description: "Checks npm package for errors that should not be merged into main by running tests and linters."
 author: "eDACT"
 
 runs:
@@ -7,16 +7,17 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
-        set -e
+        set -euo pipefail
 
         # install dependencies
-        echo "::group::Install dependencies"
+        echo "::group::Installing dependencies.."
         npm install
         echo "::endgroup::"
 
         # run tests specified in package.json
-        echo "::group::Run tests"
+        echo "::group::Running tests.."
         npm run test --if-present
         echo "::endgroup::"
 
@@ -24,6 +25,6 @@ runs:
         export NODE_ENV="production"
 
         # lint project
-        echo "::group::Run linter"
+        echo "::group::Running linter.."
         npm run lint --if-present --no-fix
         echo "::endgroup::"

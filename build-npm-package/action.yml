@@ -1,5 +1,5 @@
 name: "build npm package"
-description: "builds npm package"
+description: "Installs dependencies and builds npm package."
 author: "eDACT"
 
 runs:
@@ -7,15 +7,16 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
         # install dependencies
-        echo "::group::Install package dependencies"
+        echo "::group::Installing package dependencies.."
         npm install
         echo "::endgroup::"
 
         # build for production
-        echo "::group::Build package"
+        echo "::group::Building package for production.."
         npm run build
         echo "::endgroup::"

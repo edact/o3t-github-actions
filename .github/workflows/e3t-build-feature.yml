@@ -12,71 +12,83 @@ jobs:
     name: lint php
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
 
-      - name: create auth.json file
+      - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
-      - name: lint php code
+      - name: Linting php code
         uses: edact/o3t-github-actions/lint-php-project@main
 
   lint-oas:
     name: lint oas
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
 
-      - name: bundle default openapi
+      - name: Creating auth.json file
+        uses: edact/o3t-github-actions/create-authjson-file@main
+        with:
+          deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: Installing composer dependencies
+        run: |
+          cd src
+          composer install
+
+      - name: Bundling openapi.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
-      - name: upload bundled openapi
+      - name: Uploading bundled openapi.yml
         uses: actions/upload-artifact@main
         with:
           name: bundled-openapi
           path: src/public/openapi.yml
 
-      - name: lint openapi specification
+      - name: Linting openapi specification
         uses: edact/o3t-github-actions/lint-openapi-spec@main
 
   build-docker:
     name: build docker image
     runs-on: ubuntu-latest
-
+    needs:
+      - lint-oas
+      - lint-php
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
 
-      - name: bundle fully derefenced openapi
+      - name: Creating auth.json file
+        uses: edact/o3t-github-actions/create-authjson-file@main
+        with:
+          deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: Installing composer dependencies
+        run: |
+          cd src
+          composer install
+
+      - name: Bundling openapi-internal.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
         with:
           output_path: src/public/openapi-internal.yml
           dereference: true
           delete_files: false
 
-      - name: bundle default openapi
+      - name: Bundling openapi.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
-      - name: create auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@main
-        with:
-          deploy_token: ${{ secrets.READ_TOKEN }}
-
-      - name: create version file
+      - name: Creating version.json file
         uses: edact/o3t-github-actions/create-version-file@main
 
-      - name: build docker image
+      - name: Building docker image
         uses: edact/o3t-github-actions/build-docker-image@main
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
+          use_cache: true

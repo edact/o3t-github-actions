@@ -11,10 +11,10 @@ jobs:
     name: push helm charts
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
 
-      - name: build helm chart
+      - name: Building helm chart
         uses: edact/o3t-github-actions/build-helm-chart@main
         with:
           chart_name: ${{ github.event.repository.name }}

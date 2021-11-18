@@ -1,17 +1,17 @@
 name: "create .npmrc file"
-description: "creates .npmrc file needed for npm installs"
+description: "Creates .npmrc file needed for installing npm packages from private registries."
 author: "eDACT"
 inputs:
   npm_registry_url:
-    description: "URL of the npm registry, no trailing slashes"
+    description: "URL of the npm registry, no trailing slashes."
     default: "npm.pkg.github.com"
     required: false
   npm_scope:
-    description: "scope that should be used"
+    description: "Package scope for the private package registry."
     default: "@edact"
     required: false
   npm_token:
-    description: "token for the registry"
+    description: "Authentication token for the private registry."
     required: true
 
 runs:
@@ -19,6 +19,7 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 

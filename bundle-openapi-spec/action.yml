@@ -1,29 +1,29 @@
 name: "bundle openapi specification"
-description: "bundles multiple openapi files into one"
+description: "Bundles multiple openapi files into one file."
 author: "eDACT"
 inputs:
   input_path:
-    description: "path of file that should be dereferenced"
+    description: "Path of file that should be bundled."
     required: false
     default: "src/public/openapi-raw.yml"
   output_path:
-    description: "path of output file"
+    description: "Path of the bundled output file."
     required: false
     default: "src/public/openapi.yml"
   output_filetype:
-    description: "json or yaml"
+    description: "Filetype of the bundled output file. Accepts 'json' or 'yaml'."
     required: false
     default: "yaml"
   dereference:
-    description: "boolean wether to fully derefence the json"
+    description: "Boolean wether to fully derefence the specification."
     required: false
     default: "false"
   delete_files:
-    description: boolean wether  to delete files
+    description: "Boolean wether to delete files that have been inlined by the bundling."
     required: false
     default: "true"
   delete_glob:
-    description: "glob pattern to delete child openapi files relative to input path"
+    description: "Glob pattern to delete child openapi files relative to input path."
     required: false
     default: "**/*.oas.*"
 
@@ -32,7 +32,7 @@ runs:
   steps:
     - shell: bash
       run: |
-        docker -h
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
@@ -48,7 +48,7 @@ runs:
         fi
 
         # bundle
-        echo "::group::Bundle file"
+        echo "::group::Bundling openapi specification.."
         npx --package @apidevtools/swagger-cli swagger-cli bundle \
             --outfile ${{ inputs.output_path }} \
             --type ${{ inputs.output_filetype }} \
@@ -58,7 +58,7 @@ runs:
 
 
         # delete sub files by glob
-        echo "::group::Delete sub files"
+        echo "::group::Deleting files that are now bundled into the main specification.."
         if [ "${{ inputs.delete_files }}" = true ] ; then
             DIR=$(dirname "${{ inputs.input_path }}")
             cd ${DIR}

@@ -1,38 +1,41 @@
 name: "build helm v3"
-description: "builds and pushes a helm chart"
+description: "Logs into a helm registry, builds and pushes a helm chart."
 author: "eDACT"
 inputs:
   helm_registry_url:
-    description: "URL of the helm registry, no trailing slashes"
+    description: "URL of the helm registry, no trailing slashes."
     default: registry.edact.de/helm
     required: true
   working_directory:
-    description: "working directory the action should be performed in"
+    description: "Working directory the action should be performed in."
     default: ".deploy"
     required: false
   chart_name:
-    description: "name of the chart"
+    description: "Name of the helm chart."
     required: true
   chart_tags:
-    description: "list of tags, seperated by comma"
+    description: "List of tags for the helm chart, seperated by comma."
     required: true
   helm_registry_user:
-    description: "name of registry user"
+    description: "Username for the helm registry."
     default: "robot$publisher"
     required: true
   helm_registry_token:
-    description: "token of registry user"
+    description: "Token / password of the username for the helm registry."
     required: true
 runs:
   using: "composite"
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
+        echo "::group::Downloading helm cli.."
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
         chmod 700 get_helm.sh && ./get_helm.sh
+        echo "::endgroup::"
 
         export HELM_EXPERIMENTAL_OCI=1
 
@@ -40,13 +43,15 @@ runs:
         cd ${{ inputs.working_directory }}
 
         # log into helm registry
+        echo "::group::Logging into helm registry.."
         helm registry login -u '${{ inputs.helm_registry_user }}' -p '${{ inputs.helm_registry_token }}' ${{ inputs.helm_registry_url }}
+        echo "::endgroup::"
 
         # split chart tags in array
         chart_tags=$(echo '${{ inputs.chart_tags }}' | tr ", " "\n")
 
         # set tags
-        echo "::group::Push helm chart"
+        echo "::group::Pushing helm chart.."
         for chart_tag in $chart_tags
         do
             helm package . --version ${chart_tag}

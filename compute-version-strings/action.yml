@@ -1,16 +1,16 @@
 name: "compute version strings"
-description: "computes version strings based on GITHUB_REF for major, minor and patch version available in steps.<step_id>.outputs.version_{major/minor/patch}"
+description: "Computes version strings based on GITHUB_REF for major, minor and patch version available in steps.<step_id>.outputs.version_{major/minor/patch}."
 author: "eDACT"
 outputs:
-  version_patch:
-    description: "Patch Version"
-    value: ${{ steps.versions.outputs.version_patch }}
-  version_minor:
-    description: "Minor Version"
-    value: ${{ steps.versions.outputs.version_minor }}
   version_major:
-    description: "Major Version"
+    description: "Major version string generated from the github reference."
     value: ${{ steps.versions.outputs.version_major }}
+  version_minor:
+    description: "Minor version string generated from the github reference."
+    value: ${{ steps.versions.outputs.version_minor }}
+  version_patch:
+    description: "Patch version string generated from the github reference."
+    value: ${{ steps.versions.outputs.version_patch }}
 
 runs:
   using: "composite"
@@ -18,6 +18,7 @@ runs:
     - shell: bash
       id: versions
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
@@ -31,6 +32,9 @@ runs:
         echo "::set-output name=version_major::${MAJOR}"
         echo "::set-output name=version_minor::${MINOR}"
         echo "::set-output name=version_patch::${VERSION}"
-        echo $VERSION
-        echo $MINOR
-        echo $MAJOR
+
+        echo "::group::Generating version strings.."
+        echo "Major version: ${MAJOR}";
+        echo "Minor version: ${MINOR}";
+        echo "Patch version: ${VERSION}";
+        echo "::endgroup::"

@@ -1,6 +1,0 @@
-name: "set version variables"
-description: "sets version variables based on GITHUB_REF for major, minor and patch version"
-author: "eDACT"
-runs:
-  using: "docker"
-  image: "Dockerfile"

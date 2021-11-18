@@ -1,9 +1,13 @@
 name: "publish npm package"
-description: "publish npm package"
+description: "Publishes npm package."
 author: "eDACT"
 inputs:
+  npm_registry_url:
+    description: "URL of the npm registry, no trailing slashes."
+    default: "npm.pkg.github.com"
+    required: false
   package_version:
-    description: "version the package should get"
+    description: "Version the package should get."
     required: true
 
 runs:
@@ -11,6 +15,7 @@ runs:
   steps:
     - shell: bash
       run: |
+        #
         # makes the script existing once an error occours
         set -euo pipefail
 
@@ -18,7 +23,7 @@ runs:
         npm version ${{ inputs.package-version }} --no-git-tag-version --force
 
         # publish package to registry
-        echo "::group::Publish package"
-        # TODO: remove --registry
-        npm publish --registry=https://npm.pkg.github.com
+        echo "::group::Publishing package to npm registry.."
+        # TODO: eigentlich braucht man das --registry nicht, das kann also mal wieder weg
+        npm publish --registry=${{ inputs.npm_registry_url }}
         echo "::endgroup::"
