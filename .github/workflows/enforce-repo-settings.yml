@@ -9,10 +9,10 @@ jobs:
   enforce-repo-settings:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
 
-      - name: enforce repo settings
+      - name: Enforcing repo settings
         uses: ./enforce-repo-settings
         with:
           api-token: ${{ secrets.API_TOKEN }}
