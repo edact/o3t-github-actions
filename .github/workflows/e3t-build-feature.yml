@@ -12,34 +12,39 @@ jobs:
     name: lint php
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
 
-      - name: create auth.json file
+      - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
-      - name: lint php code
+      - name: Linting php code
         uses: edact/o3t-github-actions/lint-php-project@main
 
   lint-oas:
     name: lint oas
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Fetching repository
         uses: actions/checkout@main
 
-      - name: bundle default openapi
+      - name: Installing composer dependencies
+        run: |
+          cd src
+          composer install
+
+      - name: Bundling openapi.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
-      - name: upload bundled openapi
+      - name: Uploading bundled openapi.yml
         uses: actions/upload-artifact@main
         with:
           name: bundled-openapi
           path: src/public/openapi.yml
 
-      - name: lint openapi specification
+      - name: Linting openapi specification
         uses: edact/o3t-github-actions/lint-openapi-spec@main
 
   build-docker:
