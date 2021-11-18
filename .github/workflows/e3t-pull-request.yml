@@ -48,6 +48,16 @@ jobs:
       - name: Fetching repository
         uses: actions/checkout@main
 
+      - name: Creating auth.json file
+        uses: edact/o3t-github-actions/create-authjson-file@main
+        with:
+          deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: Installing composer dependencies
+        run: |
+          cd src
+          composer install
+
       - name: Bundling openapi.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
@@ -75,6 +85,11 @@ jobs:
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
+
+      - name: Installing composer dependencies
+        run: |
+          cd src
+          composer install
 
       - name: Bundling openapi-internal.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
