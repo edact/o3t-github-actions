@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Fetching repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
 
       - name: Bundling openapi-internal.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main

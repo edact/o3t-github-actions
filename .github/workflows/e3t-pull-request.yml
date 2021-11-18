@@ -47,9 +47,6 @@ jobs:
     steps:
       - name: Fetching repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
 
       - name: Bundling openapi.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
@@ -73,9 +70,6 @@ jobs:
     steps:
       - name: Fetching repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
 
       - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main

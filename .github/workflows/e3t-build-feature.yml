@@ -29,9 +29,6 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
 
       - name: bundle default openapi
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
@@ -48,16 +45,13 @@ jobs:
   build-docker:
     name: build docker image
     runs-on: ubuntu-latest
-    # needs:
-    #   - lint-helm
-    #   - lint-oas
-    #   - lint-php
+    needs:
+      - lint-helm
+      - lint-oas
+      - lint-php
     steps:
       - name: Fetching repository
         uses: actions/checkout@main
-        with:
-          submodules: true
-          token: ${{ secrets.READ_TOKEN }}
 
       - name: Bundling openapi-internal.yml
         uses: edact/o3t-github-actions/bundle-openapi-spec@main
