@@ -20,7 +20,7 @@ runs:
         set -euo pipefail
 
         # set version
-        npm version ${{ inputs.package-version }} --no-git-tag-version --force
+        npm version ${{ inputs.package_version }} --no-git-tag-version --force
 
         # publish package to registry
         echo "::group::Publishing package to npm registry.."
