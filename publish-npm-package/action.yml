@@ -25,5 +25,5 @@ runs:
         # publish package to registry
         echo "::group::Publishing package to npm registry.."
         # TODO: eigentlich braucht man das --registry nicht, das kann also mal wieder weg
-        npm publish --registry=${{ inputs.npm_registry_url }}
+        npm publish
         echo "::endgroup::"
