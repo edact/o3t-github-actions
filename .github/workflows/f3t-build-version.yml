@@ -1,0 +1,52 @@
+name: build version app
+on:
+  workflow_call:
+    secrets:
+      EPR_TOKEN:
+        description: "eDACT Package Registry Token"
+        required: true
+      GPR_TOKEN:
+        description: "GitHub Package Registry Token"
+        required: true
+
+jobs:
+  build-docker:
+    name: build docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetching repository
+        uses: actions/checkout@main
+
+      - name: Creating .npmrc file
+        uses: edact/o3t-github-actions/create-npmrc-file@add-f3t-workflows
+        with:
+          npm_token: ${{ secrets.GPR_TOKEN }}
+
+      - name: Computing version strings
+        uses: edact/o3t-github-actions/compute-version-strings@add-f3t-workflows
+        id: versionGetter
+
+      - name: Caching node_modules
+        uses: actions/cache@main
+        with:
+          path: node_modules
+          key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Building project
+        uses: edact/o3t-github-actions/build-npm-package@add-f3t-workflows
+
+      - name: Publishing npm package
+        uses: edact/o3t-github-actions/publish-npm-package@add-f3t-workflows
+        with:
+          package_version: ${{steps.versionGetter.outputs.version_patch}}
+
+      - name: Build and pushing docker image
+        uses: edact/o3t-github-actions/build-docker-image@add-f3t-workflows
+        with:
+          image_name: ${{ github.event.repository.name }}
+          image_tags: stable, ${{ steps.versionGetter.outputs.version_minor }}, ${{ steps.versionGetter.outputs.version_major }}
+          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+          dockerfile: Dockerfile-CI
+          use_cache: false
