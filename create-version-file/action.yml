@@ -1,5 +1,10 @@
 name: "Create version file"
 description: "Creates version file containing commit information."
+inputs:
+  path:
+    description: "Path to the version file"
+    required: false
+    default: "version.json"
 
 runs:
   using: "composite"
@@ -11,4 +16,4 @@ runs:
         # makes the script existing once an error occours
         set -euo pipefail
 
-        echo '{ "commit": "${{ github.sha }}","ref": "${{ github.ref }}","base_ref": "${{ github.base_ref }}" }' > ./src/public/version.json
+        echo '{ "commit": "${{ github.sha }}","ref": "${{ github.ref }}","base_ref": "${{ github.base_ref }}" }' > ${{ inputs.path }}
