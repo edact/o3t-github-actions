@@ -1,0 +1,34 @@
+name: pull request
+on:
+  workflow_call:
+    secrets:
+      GPR_TOKEN:
+        description: "GitHub Package Registry Token"
+        required: true
+
+jobs:
+  run-tests-and-linting:
+    name: tests & linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetching repository
+        uses: actions/checkout@main
+
+      - name: Creating .npmrc file
+        uses: edact/o3t-github-actions/create-npmrc-file@main
+        with:
+          npm_token: ${{ secrets.GPR_TOKEN }}
+
+      - name: Caching node_modules
+        uses: actions/cache@main
+        with:
+          path: node_modules
+          key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Running tests & linter
+        uses: edact/o3t-github-actions/check-npm-package@main
+
+      - name: Building project
+        uses: edact/o3t-github-actions/build-npm-package@main

@@ -84,6 +84,8 @@ jobs:
 
       - name: Creating version.json file
         uses: edact/o3t-github-actions/create-version-file@main
+        with:
+          path: "src/public/version.json"
 
       - name: Building docker image
         uses: edact/o3t-github-actions/build-docker-image@main

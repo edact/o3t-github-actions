@@ -1,0 +1,47 @@
+name: build feature app
+on:
+  workflow_call:
+    secrets:
+      EPR_TOKEN:
+        description: "eDACT Package Registry Token"
+        required: true
+      GPR_TOKEN:
+        description: "GitHub Package Registry Token"
+        required: true
+
+jobs:
+  build-docker-image:
+    name: build docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetching repository
+        uses: actions/checkout@main
+
+      - name: Creating .npmrc file
+        uses: edact/o3t-github-actions/create-npmrc-file@main
+        with:
+          npm_token: ${{ secrets.GPR_TOKEN }}
+
+      - name: Creating version.json file
+        uses: edact/o3t-github-actions/create-version-file@main
+        with:
+          path: "public/version.json"
+
+      - name: Caching node_modules
+        uses: actions/cache@main
+        with:
+          path: node_modules
+          key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Building project
+        uses: edact/o3t-github-actions/build-npm-package@main
+
+      - name: Build and pushing docker image
+        uses: edact/o3t-github-actions/build-docker-image@main
+        with:
+          image_name: ${{ github.event.repository.name }}
+          image_tags: feature
+          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+          dockerfile: Dockerfile-CI
