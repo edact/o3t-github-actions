@@ -22,6 +22,11 @@ jobs:
         with:
           npm_token: ${{ secrets.GPR_TOKEN }}
 
+      - name: Creating version.json file
+        uses: edact/o3t-github-actions/create-version-file@main
+        with:
+          path: "public/version.json"
+
       - name: Caching node_modules
         uses: actions/cache@main
         with:
