@@ -4,7 +4,7 @@ author: "eDACT"
 inputs:
   npm_registry_url:
     description: "URL of the npm registry, no trailing slashes."
-    default: "npm.pkg.github.com"
+    default: "https://npm.pkg.github.com"
     required: false
   package_version:
     description: "Version the package should get."
