@@ -30,9 +30,8 @@ jobs:
           restore-keys: |
             cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
-      - run: npm install
-      # - name: Building project
-      #   uses: edact/o3t-github-actions/build-npm-package@add-f3t-workflows
+      - name: Building project
+        uses: edact/o3t-github-actions/build-npm-package@add-f3t-workflows
 
       - name: Build and pushing docker image
         uses: edact/o3t-github-actions/build-docker-image@add-f3t-workflows
@@ -40,5 +39,5 @@ jobs:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
-          # dockerfile: Dockerfile-CI
+          dockerfile: Dockerfile-CI
           # use_cache: false
