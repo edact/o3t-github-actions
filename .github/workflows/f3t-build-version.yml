@@ -49,4 +49,3 @@ jobs:
           image_tags: stable, ${{ steps.versionGetter.outputs.version_minor }}, ${{ steps.versionGetter.outputs.version_major }}
           docker_registry_token: ${{ secrets.EPR_TOKEN }}
           dockerfile: Dockerfile-CI
-          use_cache: false
