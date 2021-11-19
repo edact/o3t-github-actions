@@ -10,7 +10,6 @@ jobs:
   build-npm:
     name: Building and pushing npm package
     runs-on: ubuntu-latest
-    # container: node:15
     steps:
       - name: Fetching repository
         uses: actions/checkout@main
@@ -36,6 +35,6 @@ jobs:
         uses: edact/o3t-github-actions/build-npm-package@main
 
       - name: Publishing npm package
-        uses: edact/o3t-github-actions/publish-npm-package
+        uses: edact/o3t-github-actions/publish-npm-package@main
         with:
           package_version: ${{steps.versionGetter.outputs.version_patch}}
