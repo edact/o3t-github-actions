@@ -29,3 +29,6 @@ jobs:
 
       - name: Running tests & linter
         uses: edact/o3t-github-actions/check-npm-package@main
+
+      - name: Building project
+        uses: edact/o3t-github-actions/build-npm-package@main
