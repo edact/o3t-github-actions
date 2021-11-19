@@ -22,14 +22,15 @@ jobs:
         with:
           npm_token: ${{ secrets.GPR_TOKEN }}
 
-      # - name: Caching node_modules
-      #   uses: actions/cache@main
-      #   with:
-      #     path: node_modules
-      #     key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Caching node_modules
+        uses: actions/cache@main
+        with:
+          path: node_modules
+          key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
+      - run: npm install
       # - name: Building project
       #   uses: edact/o3t-github-actions/build-npm-package@add-f3t-workflows
 
