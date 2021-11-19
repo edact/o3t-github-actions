@@ -43,6 +43,8 @@ jobs:
 
       - name: Creating version.json file
         uses: edact/o3t-github-actions/create-version-file@main
+        with:
+          path: "src/public/version.json"
 
       - name: Computing version strings
         uses: edact/o3t-github-actions/compute-version-strings@main
