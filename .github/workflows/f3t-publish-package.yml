@@ -36,6 +36,6 @@ jobs:
         uses: edact/o3t-github-actions/build-npm-package@main
 
       - name: Publishing npm package
-        uses: edact/o3t-github-actions/publish-npm-package@add-f3t-workflows
+        uses: edact/o3t-github-actions/publish-npm-package
         with:
           package_version: ${{steps.versionGetter.outputs.version_patch}}
