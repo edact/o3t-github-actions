@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating .npmrc file
-        uses: edact/o3t-github-actions/create-npmrc-file@main
+        uses: edact/o3t-github-actions/create-npmrc-file@feature/change-registry
         with:
           npm_token: ${{ secrets.GPR_TOKEN }}
 
@@ -28,7 +28,7 @@ jobs:
             cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Running tests & linter
-        uses: edact/o3t-github-actions/check-npm-package@main
+        uses: edact/o3t-github-actions/check-npm-package@feature/change-registry
 
       - name: Building project
-        uses: edact/o3t-github-actions/build-npm-package@main
+        uses: edact/o3t-github-actions/build-npm-package@feature/change-registry

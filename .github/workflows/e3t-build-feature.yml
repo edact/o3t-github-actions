@@ -16,12 +16,12 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@main
+        uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
       - name: Linting php code
-        uses: edact/o3t-github-actions/lint-php-project@main
+        uses: edact/o3t-github-actions/lint-php-project@feature/change-registry
 
   lint-oas:
     name: lint oas
@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@main
+        uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
@@ -41,7 +41,7 @@ jobs:
           composer install
 
       - name: Bundling openapi.yml
-        uses: edact/o3t-github-actions/bundle-openapi-spec@main
+        uses: edact/o3t-github-actions/bundle-openapi-spec@feature/change-registry
 
       - name: Uploading bundled openapi.yml
         uses: actions/upload-artifact@main
@@ -50,7 +50,7 @@ jobs:
           path: src/public/openapi.yml
 
       - name: Linting openapi specification
-        uses: edact/o3t-github-actions/lint-openapi-spec@main
+        uses: edact/o3t-github-actions/lint-openapi-spec@feature/change-registry
 
   build-docker:
     name: build docker image
@@ -63,7 +63,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@main
+        uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
         with:
           deploy_token: ${{ secrets.READ_TOKEN }}
 
@@ -73,22 +73,22 @@ jobs:
           composer install
 
       - name: Bundling openapi-internal.yml
-        uses: edact/o3t-github-actions/bundle-openapi-spec@main
+        uses: edact/o3t-github-actions/bundle-openapi-spec@feature/change-registry
         with:
           output_path: src/public/openapi-internal.yml
           dereference: true
           delete_files: false
 
       - name: Bundling openapi.yml
-        uses: edact/o3t-github-actions/bundle-openapi-spec@main
+        uses: edact/o3t-github-actions/bundle-openapi-spec@feature/change-registry
 
       - name: Creating version.json file
-        uses: edact/o3t-github-actions/create-version-file@main
+        uses: edact/o3t-github-actions/create-version-file@feature/change-registry
         with:
           path: "src/public/version.json"
 
       - name: Building docker image
-        uses: edact/o3t-github-actions/build-docker-image@main
+        uses: edact/o3t-github-actions/build-docker-image@feature/change-registry
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature

@@ -18,17 +18,17 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating .npmrc file
-        uses: edact/o3t-github-actions/create-npmrc-file@main
+        uses: edact/o3t-github-actions/create-npmrc-file@feature/change-registry
         with:
           npm_token: ${{ secrets.GPR_TOKEN }}
 
       - name: Creating version.json file
-        uses: edact/o3t-github-actions/create-version-file@main
+        uses: edact/o3t-github-actions/create-version-file@feature/change-registry
         with:
           path: "public/version.json"
 
       - name: Computing version strings
-        uses: edact/o3t-github-actions/compute-version-strings@main
+        uses: edact/o3t-github-actions/compute-version-strings@feature/change-registry
         id: versionGetter
 
       - name: Caching node_modules
@@ -40,15 +40,15 @@ jobs:
             cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Building project
-        uses: edact/o3t-github-actions/build-npm-package@main
+        uses: edact/o3t-github-actions/build-npm-package@feature/change-registry
 
       - name: Publishing npm package
-        uses: edact/o3t-github-actions/publish-npm-package@main
+        uses: edact/o3t-github-actions/publish-npm-package@feature/change-registry
         with:
           package_version: ${{steps.versionGetter.outputs.version_patch}}
 
       - name: Build and pushing docker image
-        uses: edact/o3t-github-actions/build-docker-image@main
+        uses: edact/o3t-github-actions/build-docker-image@feature/change-registry
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: stable, ${{ steps.versionGetter.outputs.version_minor }}, ${{ steps.versionGetter.outputs.version_major }}
