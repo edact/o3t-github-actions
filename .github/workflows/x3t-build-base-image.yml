@@ -1,0 +1,38 @@
+name: publish base image
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        type: string
+        description: "Name of the image."
+        required: true
+    secrets:
+      CONTAINER_REGISTRY_TOKEN:
+        description: "Container Registry Token"
+        required: true
+
+jobs:
+  build:
+    name: Build and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@main
+
+      - name: build main branch
+        uses: edact/o3t-github-actions/build-docker-image@feature/switch-registry
+        if: contains(github.ref, 'main')
+        with:
+          working_directory: ${{ inputs.image_name }}
+          image_name: ${{ inputs.image_name }}
+          image_tags: latest
+          docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
+
+      - name: build feature branch
+        uses: edact/o3t-github-actions/build-docker-image@feature/switch-registry
+        if: contains(github.ref, 'main') == false
+        with:
+          working_directory: ${{ inputs.image_name }}
+          image_name: ${{ inputs.image_name }}
+          image_tags: feature
+          docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}

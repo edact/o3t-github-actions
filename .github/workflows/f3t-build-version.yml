@@ -2,10 +2,10 @@ name: build version app
 on:
   workflow_call:
     secrets:
-      EPR_TOKEN:
+      CONTAINER_REGISTRY_TOKEN:
         description: "eDACT Package Registry Token"
         required: true
-      GPR_TOKEN:
+      NPM_REGISTRY_TOKEN:
         description: "GitHub Package Registry Token"
         required: true
 
@@ -20,7 +20,7 @@ jobs:
       - name: Creating .npmrc file
         uses: edact/o3t-github-actions/create-npmrc-file@feature/change-registry
         with:
-          npm_token: ${{ secrets.GPR_TOKEN }}
+          npm_token: ${{ secrets.NPM_REGISTRY_TOKEN }}
 
       - name: Creating version.json file
         uses: edact/o3t-github-actions/create-version-file@feature/change-registry
@@ -52,5 +52,5 @@ jobs:
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: stable, ${{ steps.versionGetter.outputs.version_minor }}, ${{ steps.versionGetter.outputs.version_major }}
-          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+          docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
           dockerfile: Dockerfile-CI

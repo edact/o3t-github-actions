@@ -4,7 +4,7 @@ author: "eDACT"
 inputs:
   helm_registry_url:
     description: "URL of the helm registry, no trailing slashes."
-    default: registry.edact.de/helm
+    default: ghcr.io/edact/helm
     required: true
   working_directory:
     description: "Working directory the action should be performed in."
@@ -18,7 +18,7 @@ inputs:
     required: true
   helm_registry_user:
     description: "Username for the helm registry."
-    default: "robot$publisher"
+    default: "manuelottlik"
     required: true
   helm_registry_token:
     description: "Token / password of the username for the helm registry."

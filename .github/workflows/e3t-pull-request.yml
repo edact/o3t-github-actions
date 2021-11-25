@@ -7,9 +7,9 @@ on:
         type: string
         required: true
     secrets:
-      READ_TOKEN:
+      PHP_REGISTRY_TOKEN:
         required: true
-      EPR_TOKEN:
+      CONTAINER_REGISTRY_TOKEN:
         description: "eDACT Package Registry Token"
         required: true
       POSTMAN_TOKEN:
@@ -26,7 +26,7 @@ jobs:
       - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
         with:
-          deploy_token: ${{ secrets.READ_TOKEN }}
+          deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
       - name: Linting php project
         uses: edact/o3t-github-actions/lint-php-project@feature/change-registry
@@ -51,7 +51,7 @@ jobs:
       - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
         with:
-          deploy_token: ${{ secrets.READ_TOKEN }}
+          deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
       - name: Installing composer dependencies
         run: |
@@ -84,7 +84,7 @@ jobs:
       - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
         with:
-          deploy_token: ${{ secrets.READ_TOKEN }}
+          deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
       - name: Installing composer dependencies
         run: |
@@ -104,7 +104,7 @@ jobs:
       - name: Running docker compose setup
         uses: edact/o3t-github-actions/run-docker-compose@feature/change-registry
         with:
-          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+          docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
           file: docker-compose-ci.yml
           healthcheck_command: curl --silent --fail localhost:8080/e3t/health
 

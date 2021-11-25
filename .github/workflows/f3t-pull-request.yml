@@ -2,7 +2,7 @@ name: pull request
 on:
   workflow_call:
     secrets:
-      GPR_TOKEN:
+      NPM_REGISTRY_TOKEN:
         description: "GitHub Package Registry Token"
         required: true
 
@@ -17,7 +17,7 @@ jobs:
       - name: Creating .npmrc file
         uses: edact/o3t-github-actions/create-npmrc-file@feature/change-registry
         with:
-          npm_token: ${{ secrets.GPR_TOKEN }}
+          npm_token: ${{ secrets.NPM_REGISTRY_TOKEN }}
 
       - name: Caching node_modules
         uses: actions/cache@main
