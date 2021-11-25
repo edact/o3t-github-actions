@@ -93,4 +93,4 @@ jobs:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature
           docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
-          use_cache: false
+          use_cache: true
