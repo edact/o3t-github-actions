@@ -18,12 +18,12 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating .npmrc file
-        uses: edact/o3t-github-actions/create-npmrc-file@feature/change-registry
+        uses: edact/o3t-github-actions/create-npmrc-file@main
         with:
           npm_token: ${{ secrets.NPM_REGISTRY_TOKEN }}
 
       - name: Creating version.json file
-        uses: edact/o3t-github-actions/create-version-file@feature/change-registry
+        uses: edact/o3t-github-actions/create-version-file@main
         with:
           path: "public/version.json"
 
@@ -36,10 +36,10 @@ jobs:
             cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Building project
-        uses: edact/o3t-github-actions/build-npm-package@feature/change-registry
+        uses: edact/o3t-github-actions/build-npm-package@main
 
       - name: Build and pushing docker image
-        uses: edact/o3t-github-actions/build-docker-image@feature/change-registry
+        uses: edact/o3t-github-actions/build-docker-image@main
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: feature

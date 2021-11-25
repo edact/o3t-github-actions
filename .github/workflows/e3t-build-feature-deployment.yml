@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@main
 
       - name: Linting helm chart
-        uses: edact/o3t-github-actions/lint-helm-chart@feature/change-registry
+        uses: edact/o3t-github-actions/lint-helm-chart@main
 
       - name: Building helm chart
-        uses: edact/o3t-github-actions/build-helm-chart@feature/change-registry
+        uses: edact/o3t-github-actions/build-helm-chart@main
         with:
           chart_name: ${{ github.event.repository.name }}
           chart_tags: 0.0.0-feature

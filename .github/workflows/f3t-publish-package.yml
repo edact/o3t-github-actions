@@ -15,12 +15,12 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating .npmrc file
-        uses: edact/o3t-github-actions/create-npmrc-file@feature/change-registry
+        uses: edact/o3t-github-actions/create-npmrc-file@main
         with:
           npm_token: ${{ secrets.NPM_REGISTRY_TOKEN }}
 
       - name: Computing version strings
-        uses: edact/o3t-github-actions/compute-version-strings@feature/change-registry
+        uses: edact/o3t-github-actions/compute-version-strings@main
         id: versionGetter
 
       - name: Caching node_modules
@@ -32,9 +32,9 @@ jobs:
             cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Building project
-        uses: edact/o3t-github-actions/build-npm-package@feature/change-registry
+        uses: edact/o3t-github-actions/build-npm-package@main
 
       - name: Publishing npm package
-        uses: edact/o3t-github-actions/publish-npm-package@feature/change-registry
+        uses: edact/o3t-github-actions/publish-npm-package@main
         with:
           package_version: ${{steps.versionGetter.outputs.version_patch}}

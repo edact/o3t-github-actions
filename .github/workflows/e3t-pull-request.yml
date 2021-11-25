@@ -24,12 +24,12 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
+        uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
       - name: Linting php project
-        uses: edact/o3t-github-actions/lint-php-project@feature/change-registry
+        uses: edact/o3t-github-actions/lint-php-project@main
 
   lint-helm:
     name: lint helm
@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Linting helm chart
-        uses: edact/o3t-github-actions/lint-helm-chart@feature/change-registry
+        uses: edact/o3t-github-actions/lint-helm-chart@main
 
   lint-oas:
     name: lint oas
@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
+        uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
@@ -59,7 +59,7 @@ jobs:
           composer install
 
       - name: Bundling openapi.yml
-        uses: edact/o3t-github-actions/bundle-openapi-spec@feature/change-registry
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
       - name: Uploading bundled openapi.yml
         uses: actions/upload-artifact@main
@@ -68,7 +68,7 @@ jobs:
           path: src/public/openapi.yml
 
       - name: Linting openapi specification
-        uses: edact/o3t-github-actions/lint-openapi-spec@feature/change-registry
+        uses: edact/o3t-github-actions/lint-openapi-spec@main
 
   run-integration-tests:
     name: run integration tests
@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Creating auth.json file
-        uses: edact/o3t-github-actions/create-authjson-file@feature/change-registry
+        uses: edact/o3t-github-actions/create-authjson-file@main
         with:
           deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
@@ -92,24 +92,24 @@ jobs:
           composer install
 
       - name: Bundling openapi-internal.yml
-        uses: edact/o3t-github-actions/bundle-openapi-spec@feature/change-registry
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
         with:
           output_path: src/public/openapi-internal.yml
           dereference: true
           delete_files: false
 
       - name: Bundling openapi.yml
-        uses: edact/o3t-github-actions/bundle-openapi-spec@feature/change-registry
+        uses: edact/o3t-github-actions/bundle-openapi-spec@main
 
       - name: Running docker compose setup
-        uses: edact/o3t-github-actions/run-docker-compose@feature/change-registry
+        uses: edact/o3t-github-actions/run-docker-compose@main
         with:
           docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
           file: docker-compose-ci.yml
           healthcheck_command: curl --silent --fail localhost:8080/e3t/health
 
       - name: Running integration tests
-        uses: edact/o3t-github-actions/run-newman-cli@feature/change-registry
+        uses: edact/o3t-github-actions/run-newman-cli@main
         with:
           postman_token: ${{ secrets.POSTMAN_TOKEN }}
           postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
