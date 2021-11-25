@@ -55,6 +55,6 @@ runs:
         for chart_tag in $chart_tags
         do
             helm package . --version ${chart_tag}
-            helm push ${{ inputs.chart_name }}-${chart_tag}.tgz oci://${{ inputs.helm_registry_url}}/${{ github.repository }}
+            helm push ${{ inputs.chart_name }}-${chart_tag}.tgz oci://${{ inputs.helm_registry_url}}/${{ inputs.chart_name }}
         done
         echo "::endgroup::"
