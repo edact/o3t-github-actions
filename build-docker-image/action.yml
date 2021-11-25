@@ -38,7 +38,7 @@ inputs:
   use_cache:
     description: "Flag wether to download image tags to use as cache when building."
     required: false
-    default: "false"
+    default: "true"
   cache_tags:
     description: "List of tags of the docker image to use as cache, seperated by comma. If omitted, image_tags is used as cache_tags."
     required: false
