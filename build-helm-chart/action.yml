@@ -18,7 +18,7 @@ inputs:
     required: true
   helm_registry_user:
     description: "Username for the helm registry."
-    default: "manuelottlik"
+    default: "edact-bot"
     required: true
   helm_registry_token:
     description: "Token / password of the username for the helm registry."

@@ -10,7 +10,7 @@ inputs:
   docker_registry_user:
     description: "Username for docker registry."
     required: false
-    default: "manuelottlik"
+    default: "edact-bot"
   docker_registry_token:
     description: "Token / password of the username for docker registry."
     required: true
