@@ -27,7 +27,7 @@ inputs:
   build_base_tag:
     description: "Tag for images the new image should be built upon."
     required: false
-    default: feature
+    default: latest
   target_stage:
     description: "Target stage for the newly built docker image."
     required: false
