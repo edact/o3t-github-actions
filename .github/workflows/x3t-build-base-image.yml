@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: build main branch
-        uses: edact/o3t-github-actions/build-docker-image@feature/switch-registry
+        uses: edact/o3t-github-actions/build-docker-image@feature/change-registry
         if: contains(github.ref, 'main')
         with:
           working_directory: ${{ inputs.image_name }}
@@ -29,7 +29,7 @@ jobs:
           docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
 
       - name: build feature branch
-        uses: edact/o3t-github-actions/build-docker-image@feature/switch-registry
+        uses: edact/o3t-github-actions/build-docker-image@feature/change-registry
         if: contains(github.ref, 'main') == false
         with:
           working_directory: ${{ inputs.image_name }}
