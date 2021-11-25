@@ -6,11 +6,11 @@ inputs:
   docker_registry_url:
     description: "URL of the docker registry, no trailing slashes."
     required: false
-    default: "registry.edact.de"
+    default: "ghcr.io/edact"
   docker_registry_user:
     description: "Username for docker registry."
     required: false
-    default: "robot$publisher"
+    default: "edact-bot"
   docker_registry_token:
     description: "Token / password of the username for docker registry."
     required: true
@@ -72,7 +72,7 @@ runs:
         echo ${DOCKER_REGISTRY_TOKEN} | docker login -u ${DOCKER_REGISTRY_USER} --password-stdin ${DOCKER_REGISTRY_URL}
         echo "::endgroup::"
 
-        FULL_IMAGE_NAME=${DOCKER_REGISTRY_URL}/${GITHUB_REPOSITORY}/${IMAGE_NAME}
+        FULL_IMAGE_NAME=${DOCKER_REGISTRY_URL}/${IMAGE_NAME}
 
         # split image tags in array
         IMAGE_TAGS=$(echo $IMAGE_TAGS | tr ", " "\n")

@@ -2,7 +2,7 @@ name: build feature deployment
 on:
   workflow_call:
     secrets:
-      EHR_TOKEN:
+      HELM_REGISTRY_TOKEN:
         description: "eDACT Helm Registry Token"
         required: true
 jobs:
@@ -21,4 +21,4 @@ jobs:
         with:
           chart_name: ${{ github.event.repository.name }}
           chart_tags: 0.0.0-feature
-          helm_registry_token: ${{ secrets.EHR_TOKEN }}
+          helm_registry_token: ${{ secrets.HELM_REGISTRY_TOKEN }}

@@ -9,11 +9,11 @@ inputs:
   docker_registry_url:
     description: "URL of the docker registry, no trailing slashes."
     required: false
-    default: "registry.edact.de"
+    default: "ghcr.io/edact"
   docker_registry_user:
     description: "Username for the docker registry."
     required: false
-    default: "robot$publisher"
+    default: "edact-bot"
   docker_registry_token:
     description: "Token / password of the user for the docker registry."
     required: true

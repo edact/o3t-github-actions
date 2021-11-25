@@ -2,9 +2,9 @@ name: build latest
 on:
   workflow_call:
     secrets:
-      READ_TOKEN:
+      PHP_REGISTRY_TOKEN:
         required: true
-      EPR_TOKEN:
+      CONTAINER_REGISTRY_TOKEN:
         required: true
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       - name: Creating auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
-          deploy_token: ${{ secrets.READ_TOKEN }}
+          deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
       - name: Installing composer dependencies
         run: |
@@ -39,7 +39,7 @@ jobs:
       - name: create auth.json file
         uses: edact/o3t-github-actions/create-authjson-file@main
         with:
-          deploy_token: ${{ secrets.READ_TOKEN }}
+          deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
       - name: Creating version.json file
         uses: edact/o3t-github-actions/create-version-file@main
@@ -51,4 +51,4 @@ jobs:
         with:
           image_name: ${{ github.event.repository.name }}
           image_tags: latest
-          docker_registry_token: ${{ secrets.EPR_TOKEN }}
+          docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
