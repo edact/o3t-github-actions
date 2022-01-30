@@ -109,22 +109,25 @@ jobs:
           healthcheck_command: curl --silent --fail localhost:8080/e3t/health
 
       - name: Running integration tests
-        uses: edact/o3t-github-actions/run-newman-cli@main
+        uses: edact/o3t-github-actions/run-newman-cli@improve-integration-testing
         with:
           postman_token: ${{ secrets.POSTMAN_TOKEN }}
           postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
 
       - name: Collecting logs from docker compose setup
+        if: always()
         run: docker compose logs --no-color > docker-compose.log
 
       - name: Uploading docker-compose.log
         uses: actions/upload-artifact@main
+        if: always()
         with:
           name: logs, report, collection
           path: docker-compose.log
 
       - name: Uploading collection.json
         uses: actions/upload-artifact@main
+        if: always()
         with:
           name: logs, report, collection
           path: collection.json
