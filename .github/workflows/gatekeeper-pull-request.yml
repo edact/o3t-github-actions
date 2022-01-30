@@ -1,0 +1,72 @@
+name: pull request
+on:
+  workflow_call:
+    inputs:
+      POSTMAN_COLLECTION_ID:
+        description: "ID of the postman collection that contains the integration tests."
+        type: string
+        required: true
+    secrets:
+      CONTAINER_REGISTRY_TOKEN:
+        description: "eDACT Package Registry Token"
+        required: true
+      POSTMAN_TOKEN:
+        description: "Postman API Token"
+        required: true
+jobs:
+  lint-helm:
+    name: lint helm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetching repository
+        uses: actions/checkout@main
+
+      - name: Linting helm chart
+        uses: edact/o3t-github-actions/lint-helm-chart@main
+
+  run-integration-tests:
+    name: run integration tests
+    runs-on: ubuntu-latest
+    needs:
+      - lint-helm
+    steps:
+      - name: Fetching repository
+        uses: actions/checkout@main
+
+      - name: Running docker compose setup
+        uses: edact/o3t-github-actions/run-docker-compose@main
+        with:
+          docker_registry_token: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
+          file: docker-compose-ci.yml
+          healthcheck_command: curl --silent --fail localhost:8080/i3t/health
+
+      - name: Running integration tests
+        uses: edact/o3t-github-actions/run-newman-cli@improve-integration-testing
+        with:
+          postman_token: ${{ secrets.POSTMAN_TOKEN }}
+          postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
+
+      - name: Collecting logs from docker compose setup
+        if: always()
+        run: docker compose logs --no-color > docker-compose.log
+
+      - name: Uploading docker-compose.log
+        uses: actions/upload-artifact@main
+        if: always()
+        with:
+          name: logs, report, collection
+          path: docker-compose.log
+
+      - name: Uploading collection.json
+        uses: actions/upload-artifact@main
+        if: always()
+        with:
+          name: logs, report, collection
+          path: collection.json
+
+      - name: Uploading newman report
+        uses: actions/upload-artifact@main
+        if: always()
+        with:
+          name: logs, report, collection
+          path: ./newman/report.html
