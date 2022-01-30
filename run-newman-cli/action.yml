@@ -23,6 +23,10 @@ runs:
         npm install newman newman-reporter-htmlextra --global --quiet
         echo "::endgroup::"
 
+        echo "::group::Downloading postman collection.."
+        curl https://api.getpostman.com/collections/${{ inputs.postman_collection_id }}?apikey=${{ inputs.postman_token }} --output collection.json
+        echo "::endgroup::"
+
         # run newman
         echo "::group::Running integration tests.."
         newman run https://api.getpostman.com/collections/${{ inputs.postman_collection_id }}?apikey=${{ inputs.postman_token }} \
