@@ -113,7 +113,7 @@ jobs:
           healthcheck_command: curl --silent --fail localhost:8080/e3t/health
 
       - name: Running integration tests
-        uses: edact/o3t-github-actions/run-newman-cli@add-postman-folder-support
+        uses: edact/o3t-github-actions/run-newman-cli@main
         with:
           postman_token: ${{ secrets.POSTMAN_TOKEN }}
           postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
