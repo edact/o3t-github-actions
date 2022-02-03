@@ -8,6 +8,9 @@ inputs:
   postman_collection_id:
     description: "ID of the collection to run."
     required: true
+  postman_collection_folder:
+    description: "Folder name of the collection to run."
+    required: true
 
 runs:
   using: "composite"
@@ -31,5 +34,6 @@ runs:
         echo "::group::Running integration tests.."
         newman run https://api.getpostman.com/collections/${{ inputs.postman_collection_id }}?apikey=${{ inputs.postman_token }} \
             --env-var baseUrl=localhost:8080 \
+            $( [ "${{ inputs.postman_collection_folder }}" != "" ] && printf %s "--folder ${{ inputs.postman_collection_folder }}" ) \
             --reporters cli,htmlextra --reporter-htmlextra-export ./newman/report.html
         echo "::endgroup::"

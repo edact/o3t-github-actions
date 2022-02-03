@@ -6,6 +6,10 @@ on:
         description: "ID of the postman collection that contains the integration tests."
         type: string
         required: true
+      POSTMAN_COLLECTION_FOLDER:
+        description: "Specific folder of the postman collection to run."
+        type: string
+        required: false
     secrets:
       PHP_REGISTRY_TOKEN:
         required: true
@@ -113,6 +117,7 @@ jobs:
         with:
           postman_token: ${{ secrets.POSTMAN_TOKEN }}
           postman_collection_id: ${{ inputs.POSTMAN_COLLECTION_ID }}
+          postman_collection_folder: ${{ inputs.POSTMAN_COLLECTION_FOLDER }}
 
       - name: Collecting logs from docker compose setup
         if: always()
