@@ -33,7 +33,7 @@ jobs:
       #       cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Running tests & linter
-        uses: edact/o3t-github-actions/check-npm-package@fix-node-gyp
+        uses: edact/o3t-github-actions/check-npm-package@main
 
       - name: Building project
         uses: edact/o3t-github-actions/build-npm-package@main
