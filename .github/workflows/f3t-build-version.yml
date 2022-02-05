@@ -17,6 +17,11 @@ jobs:
       - name: Fetching repository
         uses: actions/checkout@main
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: npm
+
       - name: Creating .npmrc file
         uses: edact/o3t-github-actions/create-npmrc-file@main
         with:
@@ -31,13 +36,13 @@ jobs:
         uses: edact/o3t-github-actions/compute-version-strings@main
         id: versionGetter
 
-      - name: Caching node_modules
-        uses: actions/cache@main
-        with:
-          path: node_modules
-          key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      # - name: Caching node_modules
+      #   uses: actions/cache@main
+      #   with:
+      #     path: node_modules
+      #     key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Building project
         uses: edact/o3t-github-actions/build-npm-package@main
