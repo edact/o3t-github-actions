@@ -7,10 +7,6 @@ runs:
   steps:
     - shell: bash
       run: |
-        node -v
-        npm -v
-    - shell: bash
-      run: |
         #
         # makes the script existing once an error occours
         set -euo pipefail
