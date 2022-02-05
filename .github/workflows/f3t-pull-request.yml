@@ -14,6 +14,10 @@ jobs:
       - name: Fetching repository
         uses: actions/checkout@main
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
       - name: Creating .npmrc file
         uses: edact/o3t-github-actions/create-npmrc-file@main
         with:
