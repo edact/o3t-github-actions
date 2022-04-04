@@ -37,3 +37,23 @@ jobs:
 
       - name: Building project
         uses: edact/o3t-github-actions/build-npm-package@main
+  try-thing:
+    name: try thing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetching repository
+        uses: actions/checkout@main
+      - id: set_var
+        run: |
+          content=`cat package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.packageJson).main}}"
+          if [["${{fromJson(steps.set_var.outputs.packageJson).main}}" != dist/*]] then
+            echo "we got it wrong"
+          fi
