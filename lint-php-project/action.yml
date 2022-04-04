@@ -25,7 +25,7 @@ runs:
       shell: bash
       run: |
         #
-        echo "${{fromJson(steps.set_var.outputs.composerJson.require)}}"
+        echo "${{fromJson(steps.set_var.outputs.composerJson).require}}"
 
     - name: install dependencies & run linter
       shell: bash
