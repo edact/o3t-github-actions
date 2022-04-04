@@ -5,7 +5,8 @@ author: "eDACT"
 runs:
   using: "composite"
   steps:
-    - shell: bash
+    - name: Putting package.json in output variable
+      shell: bash
       id: set_var
       run: |
         content=`cat package.json`
@@ -16,7 +17,8 @@ runs:
         # end of optional handling for multi line json
         echo "::set-output name=packageJson::$content"
 
-    - shell: bash
+    - name: Evaluating npm entrypoint
+      shell: bash
       run: |
         #
         if [[ "${{fromJson(steps.set_var.outputs.packageJson).main}}" != dist/* ]]; then
