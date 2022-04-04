@@ -25,13 +25,13 @@ runs:
       shell: bash
       run: |
         #
-        if [[ "${{fromJson(steps.set_var.outputs.composerJson).require['edact/e3t-php-api']}}" != "dev/main" ]]; then
-          echo "::error title=Feature package version detected::The version of 'edact/e3t-php-api' must be 'dev/main'!"
+        if [[ "${{fromJson(steps.set_var.outputs.composerJson).require['edact/e3t-php-api']}}" != "dev-main" ]]; then
+          echo "::error title=Feature package version detected::The version of 'edact/e3t-php-api' must be 'dev-main'!"
           exit 1
         fi
 
-        if [[ "${{fromJson(steps.set_var.outputs.composerJson).require['edact/e3t-oas-components']}}" != "dev/main" ]]; then
-          echo "::error title=Feature package version detected::The version of 'edact/e3t-oas-components' must be 'dev/main'!"
+        if [[ "${{fromJson(steps.set_var.outputs.composerJson).require['edact/e3t-oas-components']}}" != "dev-main" ]]; then
+          echo "::error title=Feature package version detected::The version of 'edact/e3t-oas-components' must be 'dev-main'!"
           exit 1
         fi
 
