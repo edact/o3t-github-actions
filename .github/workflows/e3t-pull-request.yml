@@ -33,7 +33,7 @@ jobs:
           deploy_token: ${{ secrets.PHP_REGISTRY_TOKEN }}
 
       - name: Linting php project
-        uses: edact/o3t-github-actions/lint-php-project@main
+        uses: edact/o3t-github-actions/lint-php-project@check-package-files
 
   lint-helm:
     name: lint helm

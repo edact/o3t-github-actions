@@ -25,7 +25,7 @@ jobs:
           npm_token: ${{ secrets.NPM_REGISTRY_TOKEN }}
 
       - name: Running tests & linter
-        uses: edact/o3t-github-actions/check-npm-package@main
+        uses: edact/o3t-github-actions/check-npm-package@check-package-files
 
       - name: Building project
         uses: edact/o3t-github-actions/build-npm-package@main
