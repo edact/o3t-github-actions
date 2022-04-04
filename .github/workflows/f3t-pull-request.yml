@@ -24,14 +24,6 @@ jobs:
         with:
           npm_token: ${{ secrets.NPM_REGISTRY_TOKEN }}
 
-      # - name: Caching node_modules
-      #   uses: actions/cache@main
-      #   with:
-      #     path: node_modules
-      #     key: cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       cache-node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-
       - name: Running tests & linter
         uses: edact/o3t-github-actions/check-npm-package@main
 
