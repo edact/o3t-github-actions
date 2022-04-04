@@ -23,6 +23,7 @@ runs:
         #
         if [[ "${{fromJson(steps.set_var.outputs.packageJson).main}}" != dist/* ]]; then
           echo "::error::The field 'main' in the package.json must point to the 'dist' folder!"
+          exit 1
         fi
 
     - shell: bash
