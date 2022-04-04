@@ -6,6 +6,24 @@ runs:
   using: "composite"
   steps:
     - shell: bash
+      id: set_var
+      run: |
+        content=`cat package.json`
+        # the following lines are only required for multi line json
+        content="${content//'%'/'%25'}"
+        content="${content//$'\n'/'%0A'}"
+        content="${content//$'\r'/'%0D'}"
+        # end of optional handling for multi line json
+        echo "::set-output name=packageJson::$content"
+
+    - shell: bash
+      run: |
+        #
+        if [[ "${{fromJson(steps.set_var.outputs.packageJson).main}}" != dist/* ]]; then
+          echo "::error::The field 'main' in the package.json must point to the 'dist' folder!"
+        fi
+
+    - shell: bash
       run: |
         #
         # makes the script existing once an error occours
