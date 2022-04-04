@@ -26,7 +26,7 @@ runs:
       run: |
         #
         echo "${{fromJson(steps.set_var.outputs.composerJson.require)}}"
-        echo "${{fromJson(steps.set_var.outputs.composerJson).require.'edact/e3t-oas-components'}}"
+        # echo "${{fromJson(steps.set_var.outputs.composerJson).require.'edact/e3t-oas-components'}}"
         # if [[ "${{fromJson(steps.set_var.outputs.composerJson).require.edact/}}" != dist/* ]]; then
         #   echo "::error::The field 'main' in the package.json must point to the 'dist' folder!"
         #   exit 1
