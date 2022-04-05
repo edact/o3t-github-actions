@@ -35,6 +35,9 @@ jobs:
       - name: Linting php project
         uses: edact/o3t-github-actions/lint-php-project@main
 
+      - name: Checking php dependencies
+        uses: edact/o3t-github-actions/check-php-dependencies@main
+
   lint-helm:
     name: lint helm
     runs-on: ubuntu-latest
