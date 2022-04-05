@@ -1,0 +1,36 @@
+name: "Check PHP dependencies"
+description: "Check PHP dependencies for feature branches."
+inputs:
+  composer_file_path:
+    description: "Path to the composer.json file."
+    required: false
+    default: "src/composer.json"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Putting composer.json in output variable
+      shell: bash
+      id: set_var
+      run: |
+        content=`cat ${{ inputs.composer_file_path }}`
+        # the following lines are only required for multi line json
+        content="${content//'%'/'%25'}"
+        content="${content//$'\n'/'%0A'}"
+        content="${content//$'\r'/'%0D'}"
+        # end of optional handling for multi line json
+        echo "::set-output name=composerJson::$content"
+
+    - name: Evaluating edact package versions
+      shell: bash
+      run: |
+        #
+        if [[ "${{fromJson(steps.set_var.outputs.composerJson).require['edact/e3t-php-api']}}" != "dev-main" ]]; then
+          echo "::error title=Feature package version detected::The version of 'edact/e3t-php-api' must be 'dev-main'!"
+          exit 1
+        fi
+
+        if [[ "${{fromJson(steps.set_var.outputs.composerJson).require['edact/e3t-oas-components']}}" != "dev-main" ]]; then
+          echo "::error title=Feature package version detected::The version of 'edact/e3t-oas-components' must be 'dev-main'!"
+          exit 1
+        fi
