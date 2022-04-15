@@ -20,7 +20,7 @@ runs:
         cd ${{ inputs.working_directory }}
 
         echo "::group::Installing dependencies.."
-        composer install --quiet
+        composer install --quiet --dev
         echo "::endgroup::"
 
         echo "::group::Linting php project.."
